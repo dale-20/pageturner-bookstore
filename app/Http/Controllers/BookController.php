@@ -9,11 +9,11 @@ class BookController extends Controller
     {
         $query = Book::with('category');
         // Filter by category if provided
-        if ($request->has('category')) {
+        if (!empty($request->category)) {
             $query->where('category_id', $request->category);
         }
         // Search by title or author
-        if ($request->has('search')) {
+        if (!empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', '%' . $search . '%')
