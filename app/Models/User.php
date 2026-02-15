@@ -56,9 +56,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+
+    public function hasPurchased($bookId)
+    {
+        return $this->orders()
+            ->where('status', 'completed')
+            ->whereHas('orderItems', function ($query) use ($bookId) {
+                $query->where('book_id', $bookId);
+            })
+            ->exists();
+    }
+
+
     // Helper method
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
     }
 }

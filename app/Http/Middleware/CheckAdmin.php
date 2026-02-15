@@ -22,24 +22,25 @@ class CheckAdmin
         $user = Auth::user();
         
         // Check if user has admin privileges
-        // Adjust this logic based on your User model structure
+        // Choose ONE of these options based on your User model structure:
         
-        // Option 1: If you have an 'is_admin' column
-        if (isset($user->is_admin) && $user->is_admin == true) {
-            return $next($request);
-        }
-        
-        // Option 2: If you have a 'role' column
-        if (isset($user->role) && $user->role === 'admin') {
-            return $next($request);
-        }
-        
-        // Option 3: If you have a roles relationship
-        // if ($user->roles()->where('name', 'admin')->exists()) {
+        // Option 1: If you have an 'is_admin' column (boolean)
+        // if ($user->is_admin === true) {
         //     return $next($request);
         // }
         
-        // User is not an admin - deny access
+        // Option 2: If you have a 'role' column (string)
+        // if ($user->role === 'admin') {
+        //     return $next($request);
+        // }
+        
+        // Option 3: If you have an isAdmin() method in your User model
+        // This is the cleanest approach
+        if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
+            return $next($request);
+        }
+        
+        // If none of the above conditions are met, deny access
         abort(403, 'Administrator access required.');
     }
 }

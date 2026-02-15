@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,19 +20,14 @@ Route::get('/categories/{category}', [CategoryController::class, 'show'])->name(
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Profile routes (from Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Review routes
-    Route::post('/books/{book}/reviews', [
-        ReviewController::class,
-        'store'
-    ])->name('reviews.store');
-    Route::delete('/reviews/{review}', [
-        ReviewController::class,
-        'destroy'
-    ])->name('reviews.destroy');
+    Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     // Order routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
@@ -40,24 +37,14 @@ Route::middleware('auth')->group(function () {
 
 // Admin-only routes (Category & Book management)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        // Admin Dashboard
+    Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     // Category management
-    Route::get('/categories/create', [
-        CategoryController::class,
-        'create'
-    ])->name('categories.create');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get(
-        '/categories/{category}/edit',
-        [CategoryController::class, 'edit']
-    )->name('categories.edit');
-    Route::put('/categories/{category}', [
-        CategoryController::class,
-        'update'
-    ])->name('categories.update');
-    Route::delete('/categories/{category}', [
-        CategoryController::class,
-        'destroy'
-    ])->name('categories.destroy');
+    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     // Book management
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');

@@ -6,7 +6,7 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
-							<img src= {{ asset("booksaw/images/page_turner_logo.png") }} alt="logo" class="footer-logo">
+							<img src= {{ asset("booksaw/images/page-turner.png") }} alt="logo" class="footer-logo">
 							<p>PageTurner is your gateway to literary adventures. Discover curated collections, connect with fellow readers, and support independent authors. Every book you find here opens a new door to knowledge, imagination, and inspiration..</p>
 						</div>
 					</div>

@@ -83,19 +83,18 @@
                         </button>
                     </form>
                 </div>
-            @endif
-            @if (!auth()->user()->isAdmin())
-                <div class="mt-6 flex space-x-4">
-                    <form action="{{ route('orders.store') }}" method="POST">
-                        @csrf
-                        <input type="number" name="quantity" min="1" max={{ $book->stock_quantity }} value="1">
-                        <input type="hidden" name="price" value="{{ $book->price }}">
-                        <input type="hidden" name="book_id" value="{{ $book->id }}">
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-                            Order
-                        </button>
-                    </form>
-                </div>
+                @if (!auth()->user()->isAdmin())
+                    <div class="mt-6 flex space-x-4">
+                        <form action="{{ route('admin.books.destroy', $book) }}" method="POST"
+                            onsubmit="return confirm('Are you sure?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
+                                Order
+                            </button>
+                        </form>
+                    </div>
+                @endif
             @endif
         @endauth
     </section>
@@ -106,37 +105,31 @@
 
         {{-- Review Form (for authenticated users) --}}
         @auth
-            @if (auth()->user()->hasPurchased($book->id))
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <h3 class="font-semibold text-lg mb-4">Write a Review</h3>
-                    <form action="{{ route('reviews.store', $book) }}" method="POST">
-                        @csrf
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">Rating</label>
-                            <select name="rating"
-                                class="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
-                                <option value="">Select rating</option>
-                                @for($i = 5; $i >= 1; $i--)
-                                    <option value="{{ $i }}">{{ $i }} Star{{ $i > 1 ? 's' : '' }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">Comment</label>
-                            <textarea name="comment" rows="4"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                placeholder="Share your thoughts about this book..."></textarea>
-                        </div>
-                        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
-                            Submit Review
-                        </button>
-                    </form>
-                </div>
-            @else
-                <x-alert type="info" class="mb-6">
-                    Purchase to write a review.
-                </x-alert>
-            @endif
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h3 class="font-semibold text-lg mb-4">Write a Review</h3>
+                <form action="{{ route('reviews.store', $book) }}" method="POST">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Rating</label>
+                        <select name="rating"
+                            class="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                            <option value="">Select rating</option>
+                            @for($i = 5; $i >= 1; $i--)
+                                <option value="{{ $i }}">{{ $i }} Star{{ $i > 1 ? 's' : '' }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Comment</label>
+                        <textarea name="comment" rows="4"
+                            class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Share your thoughts about this book..."></textarea>
+                    </div>
+                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
+                        Submit Review
+                    </button>
+                </form>
+            </div>
         @else
             <x-alert type="info" class="mb-6">
                 <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Login</a> to write a review.
