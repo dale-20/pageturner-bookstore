@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="col-md-6 text-center">
-                    <img src="{{ empty($book->cover_image) ? asset('booksaw/images/main-banner1.jpg') : asset($book->cover_image) }}"
+                    <img src="{{ empty($book->cover_image) ? asset('images/book_images/book-placeholder.png') : asset($book->cover_image) }}"
                         alt="{{ $book->title }}" class="img-fluid rounded-3 shadow-lg"
                         style="max-height: 500px; min-height: 500px; min-width: 300px; max-width: 350px">
                 </div>

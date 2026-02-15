@@ -3,7 +3,7 @@
 <div class="col-md-3">
     <div class="product-item">
         <figure class="product-style">
-            <img src="{{ empty($book->cover_image) ? asset('booksaw/images/main-banner1.jpg') : asset($book->cover_image) }}"
+            <img src="{{ empty($book->cover_image) ? asset('images/book_images/book-placeholder.png') : asset($book->cover_image) }}"
                 alt="{{ $book->title }}" class="product-item">
             <a href="{{ route('books.show', $book) }}">
                 <button type="button" class="add-to-cart" data-product-tile="add-to-cart">View Details</button>

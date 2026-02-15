@@ -19,7 +19,7 @@ Route::get('/categories/{category}', [CategoryController::class, 'show'])->name(
 
 
 // Authenticated routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'redirect.role'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Profile routes (from Breeze)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
 // Admin-only routes (Category & Book management)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
         // Admin Dashboard
-    Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     // Category management
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

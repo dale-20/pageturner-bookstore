@@ -1,18 +1,33 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin-layout')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
-    <h1>Admin</h1>
+@section('content')
+<div class="row">
+    <!-- Invoices Awaiting Payment -->
+    @include('components.stats-card')
+    
+    {{-- <!-- Payment Records -->
+    @include('dashboard.partials.payment-records')
+    
+     <!-- Total Sales -->
+    @include('dashboard.partials.total-sales')
+    
+    <!-- Mini Stats -->
+    @include('dashboard.partials.mini-stats')
+    
+    <!-- Leads Overview -->
+    @include('dashboard.partials.leads-overview')
+    
+    <!-- Latest Leads -->
+    @include('dashboard.partials.latest-leads')
+    
+    <!-- Upcoming Schedule -->
+    @include('dashboard.partials.upcoming-schedule')
+    
+    <!-- Project Status -->
+    @include('dashboard.partials.project-status')
+    
+    <!-- Team Progress -->
+    @include('dashboard.partials.team-progress')
+    --}}
+</div>
+@endsection
