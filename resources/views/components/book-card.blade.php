@@ -5,6 +5,9 @@
         <figure class="product-style">
             <img src="{{ empty($book->cover_image) ? asset('booksaw/images/main-banner1.jpg') : asset($book->cover_image) }}"
                 alt="{{ $book->title }}" class="product-item">
+            <a href="{{ route('books.show', $book) }}">
+                <button type="button" class="add-to-cart" data-product-tile="add-to-cart">View Details</button>
+            </a>
         </figure>
         <figcaption>
             <h3>{{ $book->title }}</h3>
@@ -29,10 +32,6 @@
                 <span style="margin-left: 4px; font-size: 11px; color: #6b7280;">({{ $book->reviews->count() }})</span>
             </div>
 
-
-            <div class="btn-wrap">
-                <a href="{{ route('books.show', $book) }}" class="btn-accent-arrow">View Details</a>
-            </div>
         </figcaption>
     </div>
 </div>

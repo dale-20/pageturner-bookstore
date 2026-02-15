@@ -14,6 +14,10 @@ class OrderController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+        $orders = Order::orderBy("created_at","desc")->where("user_id", $user->id)->paginate(10);
+        return view("order.index", compact("orders"));
+
     }
 
     /**
@@ -64,7 +68,8 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $order = Order::find($id);
+        return view("order.show", compact("order"));
     }
 
     /**
@@ -81,6 +86,33 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $validated = $request->validate([
+            "quantity" => "required|integer|min:1",
+            "previous_quantity" => "required|integer|min:1",
+            "order_item_id" => "required|exists:order_items,id"
+        ]);
+
+        $order = Order::find($id);
+        $orderItem = OrderItem::find($validated["order_item_id"]);
+        $orderItem->update(
+            [
+                'quantity' => $validated['quantity'],
+            ]
+        );
+        $order->update([
+            'total_amount' => $orderItem->getSubtotalAttribute()            
+        ]);
+        $book = $orderItem->book;
+
+
+        if ($validated['quantity'] > $validated['previous_quantity']){
+            $book->decrement('stock_quantity', $validated['quantity'] - $validated['previous_quantity']);
+        }
+        else{
+            $book->increment("stock_quantity",  $validated["previous_quantity"] - $validated["quantity"]);
+        }
+
+        return redirect()->route("orders.show", $order)->with("success", "Order updated successfully");
     }
 
     /**
@@ -89,5 +121,8 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         //
+        $order = Order::find($id);
+        $order->delete();
+        return redirect()->route("orders.index", $order)->with("success", "Order ID $id deleted successfully");
     }
 }

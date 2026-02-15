@@ -15,76 +15,57 @@
 
             {{-- Search and Filter Section --}}
             <div class="row mb-5">
-                <div class="col-md-12">
-                    <div class="card shadow border-0">
+                <div class="col-md-8 mx-auto">
+                    <div class="card shadow-lg border-0" style="border-radius: 20px; background: linear-gradient(145deg, #ffffff, #f8f9fa);">
                         <div class="card-body p-4">
-                            <form action="{{ route('books.index') }}" method="GET" class="row g-3">
-                                <div class="col-md-5">
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text bg-light border-end-0">
-                                            <i class="icon icon-search"></i>
-                                        </span>
-                                        <input type="text" 
-                                               name="search" 
-                                               value="{{ request('search') }}"
-                                               placeholder="Search books by title, author, or description..."
-                                               class="form-control border-start-0 ps-0">
+                            <form action="{{ route('books.index') }}" method="GET">
+                                <div class="row g-3">
+                                    {{-- Search Input --}}
+                                    <div class="col-lg-6">
+                                        <label class="form-label text-muted small fw-bold mb-2">
+                                            <i class="bi bi-search text-danger me-1"></i> SEARCH BOOKS
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0 rounded-start-4">
+                                                <i class="bi bi-search text-danger"></i>
+                                            </span>
+                                            <input type="text" 
+                                                   name="search" 
+                                                   value="{{ request('search') }}"
+                                                   placeholder="Title, author, or description..."
+                                                   class="form-control border-start-0 rounded-end-4 py-3"
+                                                   style="background: white;">
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="col-md-4">
-                                    <select name="category" class="form-select form-select-lg">
-                                        <option value="">All Categories</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" 
-                                                {{ request('category') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                    {{-- Category Select --}}
+                                    <div class="col-lg-4">
+                                        <label class="form-label text-muted small fw-bold mb-2">
+                                            <i class="bi bi-tags text-danger me-1"></i> CATEGORY
+                                        </label>
+                                        <select name="category" class="form-select py-3 rounded-4">
+                                            <option value="">All Categories</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}" 
+                                                    {{ request('category') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                <div class="col-md-3">
-                                    <div class="d-flex gap-2">
-                                        <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
-                                            <i class="icon icon-search me-2"></i> Search
+                                    {{-- Search Button --}}
+                                    <div class="col-lg-2 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-primary w-100 py-3 rounded-4 fw-bold">
+                                            <i class="bi bi-search me-2"></i> Search
                                         </button>
                                     </div>
                                 </div>
-
-                                @if(request()->has('search') || request()->has('category'))
-                                    <div class="col-md-12 mt-3">
-                                        <div class="alert alert-light d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <small class="text-muted">Active filters:</small>
-                                                @if(request()->has('search'))
-                                                    <span class="badge bg-info ms-2">
-                                                        Search: "{{ request('search') }}"
-                                                    </span>
-                                                @endif
-                                                @if(request()->has('category'))
-                                                    @php
-                                                        $selectedCategory = $categories->firstWhere('id', request('category'));
-                                                    @endphp
-                                                    @if($selectedCategory)
-                                                        <span class="badge bg-info ms-2">
-                                                            Category: {{ $selectedCategory->name }}
-                                                        </span>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                            <a href="{{ route('books.index') }}" class="text-decoration-none small">
-                                                Clear all
-                                            </a>
-                                        </div>
-                                    </div>
-                                @endif
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             {{-- Results Count --}}
             <div class="row mb-4">

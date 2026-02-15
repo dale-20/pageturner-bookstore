@@ -195,6 +195,40 @@ a {
   --bs-gradient: none;
 }
 
+/* Clean and modern hover effect */
+.btn-primary {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 10px -3px rgba(var(--bs-primary-rgb), 0.4);
+}
+
+.btn-outline-primary {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(var(--bs-primary-rgb), 0.3);
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #fff;
+}
+
+.btn-outline-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 10px -3px rgba(var(--bs-primary-rgb), 0.2);
+}
+
 .pagination {
   --bs-pagination-active-bg: var(--bs-black);
   --bs-pagination-bg: transparent;
