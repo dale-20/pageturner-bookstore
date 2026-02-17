@@ -17,7 +17,7 @@
                 </a>
             </div>
             <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                <div id="reportrange" class="reportrange-picker d-flex align-items-center">
+                {{-- <div id="reportrange" class="reportrange-picker d-flex align-items-center">
                     <span class="reportrange-picker-field"></span>
                 </div>
                 <div class="dropdown filter-dropdown">
@@ -37,8 +37,9 @@
                                 <input type="checkbox" class="custom-control-input" id="Team" checked="checked" />
                                 <label class="custom-control-label c-pointer" for="Team">Team</label>
                             </div>
-                        </div>
-                        <div class="dropdown-divider"></div>
+                        </div> --}}
+                        @yield('add-features')
+                        {{-- <div class="dropdown-divider"></div>
                         <a href="javascript:void(0);" class="dropdown-item">
                             <i class="feather-plus me-3"></i>
                             <span>Create New</span>
@@ -46,9 +47,9 @@
                         <a href="javascript:void(0);" class="dropdown-item">
                             <i class="feather-filter me-3"></i>
                             <span>Manage Filter</span>
-                        </a>
-                    </div>
-                </div>
+                        </a> --}}
+                    {{-- </div>
+                </div> --}}
             </div>
         </div>
         <div class="d-md-none d-flex align-items-center">

@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\CheckAdmin::class,
             'redirect.role' => \App\Http\Middleware\RedirectBasedOnRole::class,
+            'redirect.books.index' => \App\Http\Middleware\RedirectBookIndex::class,
         ]);
 
         // Add web middleware group for session, CSRF, etc.

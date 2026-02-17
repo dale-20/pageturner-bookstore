@@ -21,22 +21,19 @@
                     </a>
                     <ul class="nxl-submenu">
                         <li class="nxl-item"><a class="nxl-link" href="{{ route('dashboard') }}">CRM</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Analytics</a></li>
                     </ul>
                 </li>
 
                 <!-- Reports -->
                 <li class="nxl-item nxl-hasmenu">
                     <a href="javascript:void(0);" class="nxl-link">
-                        <span class="nxl-micon"><i class="feather-cast"></i></span>
-                        <span class="nxl-mtext">Reports</span>
+                        <span class="nxl-micon"><i class="feather-book"></i></span>
+                        <span class="nxl-mtext">Items</span>
                         <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                     </a>
                     <ul class="nxl-submenu">
-                        <li class="nxl-item"><a class="nxl-link" href="">Sales Report</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Leads Report</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Project Report</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Timesheets Report</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.books.index') }}">Books</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.categories.index') }}">Categories</a></li>
                     </ul>
                 </li>
 
@@ -44,32 +41,17 @@
                 <li class="nxl-item nxl-hasmenu">
                     <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-send"></i></span>
-                        <span class="nxl-mtext">Applications</span>
+                        <span class="nxl-mtext">Orders</span>
                         <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                     </a>
                     <ul class="nxl-submenu">
-                        <li class="nxl-item"><a class="nxl-link" href="">Chat</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Email</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Tasks</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Notes</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Storage</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Calendar</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="">Pendings</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="">Processing</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="">Completed</a></li>
                     </ul>
                 </li>
 
-                <!-- Help Center -->
-                <li class="nxl-item nxl-hasmenu">
-                    <a href="javascript:void(0);" class="nxl-link">
-                        <span class="nxl-micon"><i class="feather-life-buoy"></i></span>
-                        <span class="nxl-mtext">Help Center</span>
-                        <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                    </a>
-                    <ul class="nxl-submenu">
-                        <li class="nxl-item"><a class="nxl-link" href="#!">Support</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">KnowledgeBase</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Documentations</a></li>
-                    </ul>
-                </li>
+              
             </ul>
 
         </div>

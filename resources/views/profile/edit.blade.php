@@ -1,5 +1,9 @@
-{{-- resources/views/profile/edit.blade.php --}}
-@extends('layouts.app')
+
+@if(auth()->user()->isAdmin())
+    @extends('layouts.admin-layout')
+@else
+    @extends('layouts.app')
+@endif
 
 @section('title', 'My Profile - PageTurner')
 

@@ -61,7 +61,7 @@
                 {{-- @include('layouts.partials.notifications') --}}
 
                 <!-- User Menu -->
-                {{-- @include('layouts.partials.user-menu') --}}
+                @include('components.admin-menu')
             </div>
         </div>
     </div>

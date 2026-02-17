@@ -8,15 +8,15 @@
                         <i class="feather-dollar-sign"></i>
                     </div>
                     <div>
-                        <div class="fs-4 fw-bold text-dark"><span class="counter">45</span>/<span class="counter">76</span></div>
-                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Invoices Awaiting Payment</h3>
+                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $stats['revenue'] }}</div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Revenue</h3>
                     </div>
                 </div>
                 <a href="javascript:void(0);" class="">
-                    <i class="feather-more-vertical"></i>
+                    <i class="feather-arrow-right"></i>
                 </a>
             </div>
-            <div class="pt-4">
+            {{-- <div class="pt-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Invoices Awaiting </a>
                     <div class="w-100 text-end">
@@ -27,7 +27,7 @@
                 <div class="progress mt-2 ht-3">
                     <div class="progress-bar bg-primary" role="progressbar" style="width: 56%"></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -39,18 +39,18 @@
             <div class="d-flex align-items-start justify-content-between mb-4">
                 <div class="d-flex gap-4 align-items-center">
                     <div class="avatar-text avatar-lg bg-gray-200">
-                        <i class="feather-cast"></i>
+                        <i class="feather-users"></i>
                     </div>
                     <div>
-                        <div class="fs-4 fw-bold text-dark"><span class="counter">48</span>/<span class="counter">86</span></div>
-                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Converted Leads</h3>
+                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $stats['totalUsers'] }}</div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">User Count</h3>
                     </div>
                 </div>
                 <a href="javascript:void(0);" class="">
-                    <i class="feather-more-vertical"></i>
+                    <i class="feather-arrow-right"></i>
                 </a>
             </div>
-            <div class="pt-4">
+            {{-- <div class="pt-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Converted Leads </a>
                     <div class="w-100 text-end">
@@ -61,7 +61,7 @@
                 <div class="progress mt-2 ht-3">
                     <div class="progress-bar bg-warning" role="progressbar" style="width: 63%"></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -76,15 +76,15 @@
                         <i class="feather-briefcase"></i>
                     </div>
                     <div>
-                        <div class="fs-4 fw-bold text-dark"><span class="counter">16</span>/<span class="counter">20</span></div>
-                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Projects In Progress</h3>
+                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $stats['totalOrders'] }}</div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Order Count</h3>
                     </div>
                 </div>
                 <a href="javascript:void(0);" class="">
-                    <i class="feather-more-vertical"></i>
+                    <i class="feather-arrow-right"></i>
                 </a>
             </div>
-            <div class="pt-4">
+            {{-- <div class="pt-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Projects In Progress </a>
                     <div class="w-100 text-end">
@@ -95,7 +95,7 @@
                 <div class="progress mt-2 ht-3">
                     <div class="progress-bar bg-success" role="progressbar" style="width: 78%"></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -110,15 +110,15 @@
                         <i class="feather-activity"></i>
                     </div>
                     <div>
-                        <div class="fs-4 fw-bold text-dark"><span class="counter">46.59</span>%</div>
-                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Conversion Rate</h3>
+                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $stats['totalBooks'] }}</div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Book Count</h3>
                     </div>
                 </div>
-                <a href="javascript:void(0);" class="">
-                    <i class="feather-more-vertical"></i>
+                <a href="{{ route('admin.books.index') }}" class="">
+                    <i class="feather-arrow-right"></i>
                 </a>
             </div>
-            <div class="pt-4">
+            {{-- <div class="pt-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line"> Conversion Rate </a>
                     <div class="w-100 text-end">
@@ -129,7 +129,7 @@
                 <div class="progress mt-2 ht-3">
                     <div class="progress-bar bg-danger" role="progressbar" style="width: 46%"></div>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
