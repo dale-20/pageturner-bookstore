@@ -20,6 +20,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('booksaw/icomoon/icomoon.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('booksaw/css/vendor.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{  asset('booksaw/style.css') }}" />
+    @stack('styles')
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">

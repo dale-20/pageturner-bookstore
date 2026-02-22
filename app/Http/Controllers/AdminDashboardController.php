@@ -44,4 +44,41 @@ class AdminDashboardController extends Controller
         $revenue = $book->price * $total_sold;
         return view('admin.show', compact('book', 'total_sold', 'revenue'));
     }
+
+    public function orders(string $status)
+    {
+        $orders = Order::where('status', $status)->get();
+
+        return view('admin.orders', compact('orders'));
+
+    }
+
+    public function orderStatus(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'status' => 'required',
+        ]);
+        $prev_status = $order->status;
+        $order->update([
+            'status' => $validated['status'],
+        ]);
+
+        $success = 'Order sucessfully updated';
+
+        return view('admin.orderShow', compact('order', 'success'));
+
+    }
+
+    public function orderShow(int $id)
+    {
+        $order = Order::with(['user', 'orderItems.book', 'orderItems.book.category'])
+            ->find($id);
+
+        if (!$order) {
+            return redirect()->route('admin.orders', 'pending')
+                ->with('error', 'Order not found.');
+        }
+
+        return view('admin.orderShow', compact('order'));
+    }
 }

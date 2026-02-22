@@ -16,9 +16,9 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user()->load('orders');
+        $view = $user->isAdmin() ? 'profile.admin-edit' : 'profile.edit';
+        return view($view, compact('user'));
     }
 
     /**
@@ -26,13 +26,21 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Update name and email only (exclude password fields from fill)
+        $user->fill($request->safe()->only(['name', 'email']));
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // Update password only if a new one was provided
+        if ($request->filled('password')) {
+            $user->password = $request->password; // auto-hashed by model cast
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

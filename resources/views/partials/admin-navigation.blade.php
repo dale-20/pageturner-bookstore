@@ -45,9 +45,9 @@
                         <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                     </a>
                     <ul class="nxl-submenu">
-                        <li class="nxl-item"><a class="nxl-link" href="">Pendings</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Processing</a></li>
-                        <li class="nxl-item"><a class="nxl-link" href="">Completed</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.orders', 'pending') }}">Pendings</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.orders', 'processing') }}">Processing</a></li>
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.orders', 'completed') }}">Completed</a></li>
                     </ul>
                 </li>
 

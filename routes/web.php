@@ -59,5 +59,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+    // Order management
+    Route::get('/orders/{status}', [AdminDashboardController::class, 'orders'])->name('orders');
+    Route::patch('/orders/update/{order}', [AdminDashboardController::class, 'orderStatus'])->name('order.status');
+    Route::get('/orders/detail/{order}', [AdminDashboardController::class, 'orderShow'])->name('orderShow');
+
 });
 require __DIR__ . '/auth.php';

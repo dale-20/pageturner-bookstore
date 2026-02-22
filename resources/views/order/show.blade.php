@@ -123,7 +123,7 @@
                         <div class="row g-0">
                             <div class="col-md-5 p-4">
                                 <div class="position-relative">
-                                    <img src="{{ empty($book->cover_image) ? asset('booksaw/images/main-banner1.jpg') : asset($book->cover_image) }}"
+                                    <img src="{{ empty($book->cover_image) ? asset('images/book_images/book-placeholder.png') : asset('storage/'. $book->cover_image) }}"
                                         alt="{{ $book->title }}" class="img-fluid rounded shadow-lg w-100">
 
                                     {{-- Status badge on image --}}
