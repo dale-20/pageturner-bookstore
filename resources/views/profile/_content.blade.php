@@ -25,14 +25,35 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-lg profile-card" style="border-radius: 20px; background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);">
                 <div class="card-body text-center p-4">
-                    {{-- Avatar --}}
-                    <div class="mb-4 position-relative">
+                    {{-- Avatar with upload --}}
+                    <div class="mb-4 position-relative d-inline-block">
                         <div class="avatar-glow"></div>
-                        <div class="bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center position-relative"
-                             style="width: 120px; height: 120px; background: linear-gradient(135deg, #dc2626, #ef4444, #991b1b); box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);">
-                            <span class="text-white" style="font-size: 3.5rem; font-weight: 700;">{{ substr($user->name, 0, 1) }}</span>
+
+                        {{-- Avatar display --}}
+                        <div id="avatarWrapper" class="rounded-circle overflow-hidden d-inline-flex align-items-center justify-content-center position-relative"
+                             style="width: 120px; height: 120px; background: linear-gradient(135deg, #dc2626, #ef4444, #991b1b); box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3); cursor: pointer;"
+                             onclick="document.getElementById('profile_photo').click()"
+                             title="Click to change photo">
+                            @if($user->profile_photo)
+                                <img id="avatarPreview"
+                                     src="{{ asset('storage/' . $user->profile_photo) }}"
+                                     alt="{{ $user->name }}"
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <img id="avatarPreview" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none;">
+                                <span id="avatarInitial" class="text-white" style="font-size: 3.5rem; font-weight: 700;">{{ substr($user->name, 0, 1) }}</span>
+                            @endif
+
+                            {{-- Hover overlay --}}
+                            <div class="avatar-overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center rounded-circle"
+                                 style="background: rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.2s;">
+                                <i class="bi bi-camera-fill text-white" style="font-size: 1.5rem;"></i>
+                                <small class="text-white" style="font-size: 0.65rem;">Change photo</small>
+                            </div>
                         </div>
-                        <div class="position-absolute bottom-0 end-0 translate-middle p-2 bg-success border border-3 border-white rounded-circle" style="width: 20px; height: 20px;"></div>
+
+                        {{-- Online indicator --}}
+                        <div class="position-absolute bottom-0 end-0 p-2 bg-success border border-3 border-white rounded-circle" style="width: 20px; height: 20px;"></div>
                     </div>
 
                     <h4 class="fw-bold mb-1" style="color: #1e293b;">{{ $user->name }}</h4>
@@ -114,9 +135,13 @@
                     {{-- Toasts are rendered at bottom of file, no inline alerts needed --}}
 
                     {{-- Update Profile Form --}}
-                    <form method="POST" action="{{ route('profile.update') }}" id="profileForm">
+                    <form method="POST" action="{{ route('profile.update') }}" id="profileForm" enctype="multipart/form-data">
                         @csrf
                         @method('PATCH')
+
+                        {{-- Hidden file input for avatar --}}
+                        <input type="file" id="profile_photo" name="profile_photo"
+                               accept="image/*" class="d-none">
 
                         {{-- Name --}}
                         <div class="mb-4">
@@ -421,7 +446,26 @@
         btn.disabled = true;
     });
 
-    // Toast auto-dismiss with progress bar
+    // Avatar hover effect
+    const avatarWrapper = document.getElementById('avatarWrapper');
+    const overlay = avatarWrapper.querySelector('.avatar-overlay');
+    avatarWrapper.addEventListener('mouseenter', () => overlay.style.opacity = '1');
+    avatarWrapper.addEventListener('mouseleave', () => overlay.style.opacity = '0');
+
+    // Avatar preview on file select
+    document.getElementById('profile_photo').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const preview = document.getElementById('avatarPreview');
+            const initial = document.getElementById('avatarInitial');
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            if (initial) initial.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    });
     function initToast(toastId, barId, duration) {
         const toastEl = document.getElementById(toastId);
         const bar = document.getElementById(barId);

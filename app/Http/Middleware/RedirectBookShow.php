@@ -19,13 +19,12 @@ class RedirectBookShow
         if (auth()->user()) {
             $user = auth()->user();
 
-
             if ($user->isAdmin() && $request->routeIs("books.show")) {
-                return redirect()->route("admin.books.show");
+                return redirect()->route("admin.books.show", $request->route('book'));
             }
 
             if (!$user->isAdmin() && $request->routeIs("admin.books.show")) {
-                return redirect()->route("books.show");
+                return redirect()->route("books.show", $request->route('book'));
             }
         }
         return $next($request);

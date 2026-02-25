@@ -11,9 +11,20 @@
                             <div class="dropdown">
                                 <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center"
                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center rounded-circle me-2"
+                                    <div class="avatar-circle me-2 rounded-circle overflow-hidden d-flex align-items-center justify-content-center"
                                         style="width: 28px; height: 28px; font-size: 12px;">
-                                        {{ substr(auth()->user()->name, 0, 1) }}
+                                        @php
+                                            $user = auth()->user();
+                                        @endphp
+                                        @if($user->profile_photo)
+                                            <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="{{ $user->name }}"
+                                                style="width: 100%; height: 100%; object-fit: cover;">
+                                        @else
+                                            <div
+                                                class="bg-primary text-white w-100 h-100 d-flex align-items-center justify-content-center">
+                                                {{ substr($user->name, 0, 1) }}
+                                            </div>
+                                        @endif
                                     </div>
                                     {{ auth()->user()->name }}
                                 </button>

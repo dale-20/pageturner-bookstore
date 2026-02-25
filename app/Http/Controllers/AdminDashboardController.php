@@ -58,15 +58,12 @@ class AdminDashboardController extends Controller
         $validated = $request->validate([
             'status' => 'required',
         ]);
-        $prev_status = $order->status;
         $order->update([
             'status' => $validated['status'],
         ]);
 
-        $success = 'Order sucessfully updated';
-
-        return view('admin.orderShow', compact('order', 'success'));
-
+        return redirect()->route('admin.orderShow', $order->id)
+            ->with('success', 'Order successfully updated.');
     }
 
     public function orderShow(int $id)

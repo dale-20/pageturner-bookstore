@@ -41,7 +41,7 @@
                                 <a href="" class="hstack gap-3">
                                     {{-- @if($lead->avatar) --}}
                                         <div class="avatar-image avatar-md">
-                                            <img src="{{ asset('duralex/images/profile_default.png') }}" alt="user-image" class="img-fluid">
+                                            <img src="{{ empty($order->user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $order->user->profile_photo) }}" alt="user-image" class="img-fluid">
                                         </div>
                                     {{-- @else
                                         <div class="avatar-image avatar-md bg-{{ $lead->avatar_color }} text-white">

@@ -1,34 +1,48 @@
 @if(session('success'))
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3
-    rounded relative" role="alert">
-
-            <span class="block sm:inline">{{ session('success') }}</span>
-
+    <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert"
+         style="border-left: 4px solid #198754; border-radius: 8px;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <span>{{ session('success') }}</span>
         </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
+
 @if(session('error'))
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4
-
-    py-3 rounded relative" role="alert">
-
-            <span class="block sm:inline">{{ session('error') }}</span>
+    <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert"
+         style="border-left: 4px solid #dc3545; border-radius: 8px;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            <span>{{ session('error') }}</span>
         </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
-@if($errors->any())
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4
 
-    py-3 rounded relative">
-
-            <ul class="list-disc list-inside">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+@if(session('status'))
+    <div class="alert alert-info alert-dismissible fade show mx-3 mt-3" role="alert"
+         style="border-left: 4px solid #0dcaf0; border-radius: 8px;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <span>{{ session('status') }}</span>
         </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert"
+         style="border-left: 4px solid #dc3545; border-radius: 8px;">
+        <div class="d-flex align-items-center mb-1">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Please fix the following errors:</strong>
+        </div>
+        <ul class="mb-0 ps-4 mt-1">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif

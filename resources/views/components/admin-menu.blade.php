@@ -5,13 +5,13 @@
 
 <div class="dropdown nxl-h-item">
     <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
-        <img src="{{  asset('duralex/images/profile_default.png') }}" alt="user-image"
+        <img src="{{ empty($user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $user->profile_photo)}}" alt="user-image"
             class="img-fluid user-avtar me-0" />
     </a>
     <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
         <div class="dropdown-header">
             <div class="d-flex align-items-center">
-                <img src="{{  asset('duralex/images/profile_default.png') }}" alt="user-image"
+                <img src="{{ empty($user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $user->profile_photo)}}" alt="user-image"
                     class="img-fluid user-avtar" />
                 <div>
                     <h6 class="text-dark mb-0"> {{ $user->name }}</h6>

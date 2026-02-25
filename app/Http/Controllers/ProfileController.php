@@ -28,16 +28,19 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Update name and email only (exclude password fields from fill)
         $user->fill($request->safe()->only(['name', 'email']));
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // Update password only if a new one was provided
         if ($request->filled('password')) {
-            $user->password = $request->password; // auto-hashed by model cast
+            $user->password = $request->password;
+        }
+
+        if ($request->hasFile('profile_photo')) {
+            $user->profile_photo = $request->file('profile_photo')
+                ->store('profile-photos', 'public');
         }
 
         $user->save();

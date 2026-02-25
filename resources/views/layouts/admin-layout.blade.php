@@ -32,7 +32,6 @@
 
     <!-- Header -->
     @include('partials.admin-header')
-    {{-- @include('partials.flash-messages') --}}
 
     <!-- Main Content -->
     <main class="nxl-container">
@@ -40,7 +39,8 @@
             <!-- Page Header -->
             @include('components.page-header')
 
-            
+            <!-- Flash Messages -->
+            @include('partials.flash-messages')
             <!-- Main Content Area -->
             <div class="main-content">
                 @yield('content')
