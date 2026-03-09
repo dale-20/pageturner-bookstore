@@ -78,4 +78,40 @@ class AdminDashboardController extends Controller
 
         return view('admin.orderShow', compact('order'));
     }
+
+    public function users(string $role)
+    {
+        $users = User::where('role', $role)->get();
+
+        return view('admin.users', compact('users'));
+    }
+
+    public function userShow(User $user)
+    {
+        $user->loadCount('orders')->loadSum('orders', 'total_amount');
+        return view('admin.userShow', compact('user'));
+    }
+
+    public function userEdit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function userUpdate(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ]);
+
+        $user->update($request->only('name', 'email'));
+
+        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
+    }
+
+    public function userDestroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+    }
 }

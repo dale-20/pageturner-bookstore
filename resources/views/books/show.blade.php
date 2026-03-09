@@ -51,7 +51,7 @@
                         {{-- Order Form --}}
                         @auth
                             @if (!auth()->user()->isAdmin() && $book->stock_quantity > 0)
-                                <form action="{{ route('orders.store') }}" method="POST" class="d-flex gap-3">
+                                <form action="{{ route('cart.store') }}" method="POST" class="d-flex gap-3">
                                     @csrf
                                     <div class="d-flex align-items-center border rounded-3">
                                         <input type="number" name="quantity" min="1" max="{{ $book->stock_quantity }}" value="1"
@@ -60,7 +60,7 @@
                                     <input type="hidden" name="price" value="{{ $book->price }}">
                                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                                     <button type="submit" class="btn btn-primary px-4">
-                                        Order Now
+                                        Checkout Item
                                     </button>
                                 </form>
                             @elseif(!auth()->user()->isAdmin() && $book->stock_quantity <= 0)
@@ -77,31 +77,6 @@
                         alt="{{ $book->title }}" class="img-fluid rounded-3 shadow-lg"
                         style="max-height: 500px; min-height: 500px; min-width: 300px; max-width: 350px">
                 </div>
-
-                {{-- Admin Actions --}}
-                @auth
-                    @if(auth()->user()->isAdmin())
-                        <div class="container mt-4">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body">
-                                    <div class="d-flex gap-3">
-                                        <a href="{{ route('admin.books.edit', $book) }}" class="btn btn-warning">
-                                            Edit Book
-                                        </a>
-                                        <form action="{{ route('admin.books.destroy', $book) }}" method="POST"
-                                            onsubmit="return confirm('Are you sure?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">
-                                                Delete Book
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                @endauth
     </section>
 
     {{-- Reviews Section --}}

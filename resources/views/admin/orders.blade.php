@@ -32,8 +32,8 @@
                                     <td>
                                         <div class="hstack gap-3">
                                             <div class="avatar-image avatar-md">
-                                                <img src="{{ empty($order->user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $order->user->profile_photo) }}" alt="user-image"
-                                                    class="img-fluid">
+                                                <img src="{{ empty($order->user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $order->user->profile_photo) }}"
+                                                    alt="user-image" class="img-fluid">
                                             </div>
                                             <div>
                                                 <span class="text-truncate-1-line">{{ $order->user->name ?? 'N/A' }}</span>
@@ -42,9 +42,23 @@
                                         </div>
                                     </td>
                                     <td>
-                                        @foreach($order->orderItems as $item)
-                                            <div>{{ $item->book->title ?? 'N/A' }} x{{ $item->quantity }}</div>
-                                        @endforeach
+                                        @php $items = $order->orderItems; @endphp
+                                        <span class="fw-semibold">{{ $items->first()->book->title ?? 'N/A' }}</span>
+                                        <small class="text-muted d-block">x{{ $items->first()->quantity ?? 1 }}</small>
+                                        @if($items->count() > 1)
+                                            <a class="small text-primary" data-bs-toggle="collapse"
+                                               href="#orderItems_{{ $order->id }}" role="button">
+                                                +{{ $items->count() - 1 }} more
+                                            </a>
+                                            <div class="collapse mt-1" id="orderItems_{{ $order->id }}">
+                                                @foreach($items->skip(1) as $item)
+                                                    <div class="small text-muted">
+                                                        {{ $item->book->title ?? 'N/A' }}
+                                                        <span class="text-dark">x{{ $item->quantity }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </td>
                                     <td>${{ number_format($order->total_amount, 2) }}</td>
                                     <td>
@@ -60,13 +74,18 @@
                                             {{ ucfirst($order->status) }}
                                         </span>
                                     </td>
-                                    <td>{{ $order->created_at->format('Y-m-d, h:iA') }}</td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span>{{ $order->created_at->format('M d, Y') }}</span>
+                                            <small class="text-muted">{{ $order->created_at->format('h:i A') }}</small>
+                                        </div>
+                                    </td>
 
                                     <td>
                                         <div class="hstack gap-2 justify-content-end">
                                             <!-- View Button -->
-                                            <a href="{{ route('admin.orderShow', $order->id) }}"
-                                                class="avatar-text avatar-md" data-bs-toggle="tooltip" title="View Order">
+                                            <a href="{{ route('admin.orderShow', $order->id) }}" class="avatar-text avatar-md"
+                                                data-bs-toggle="tooltip" title="View Order">
                                                 <i class="feather feather-eye"></i>
                                             </a>
 
@@ -85,7 +104,7 @@
                                                 </form>
 
                                                 <!-- Deny/Cancel Button -->
-                                                <form action="{{ route('admin.order.status', $order) }}" method="POST"
+                                                <form action="{{ route('order.cancel', $order) }}" method="POST"
                                                     class="d-inline"
                                                     onsubmit="return confirm('Are you sure you want to deny this order?');">
                                                     @csrf

@@ -7,7 +7,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
+
+
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Book browsing (public)
@@ -36,6 +39,13 @@ Route::middleware(['auth', 'redirect.role'])->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::patch('/orders/cancel/{order}', [OrderController::class, 'changeStatus'])->name('order.cancel');
+    // Cart routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+    Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 });
 
 
@@ -63,6 +73,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders/{status}', [AdminDashboardController::class, 'orders'])->name('orders');
     Route::patch('/orders/update/{order}', [AdminDashboardController::class, 'orderStatus'])->name('order.status');
     Route::get('/orders/detail/{order}', [AdminDashboardController::class, 'orderShow'])->name('orderShow');
-
+    // User management
+    Route::get('/users/view/{role}', [AdminDashboardController::class, 'users'])->name('users');
+    Route::get('/users/{user}', [AdminDashboardController::class, 'userShow'])->name('users.show');
+    Route::get('/users/{user}/edit', [AdminDashboardController::class, 'userEdit'])->name('users.edit');
+    Route::patch('/users/{user}', [AdminDashboardController::class, 'userUpdate'])->name('users.update');
+    Route::delete('/users/{user}', [AdminDashboardController::class, 'userDestroy'])->name('users.destroy');
 });
 require __DIR__ . '/auth.php';

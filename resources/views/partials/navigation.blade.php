@@ -30,28 +30,21 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('dashboard') }}">
-                                            <i class="icon icon-dashboard me-2"></i>Dashboard
-                                        </a>
-                                    </li>
-                                    @if(auth()->user()->isAdmin())
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
-                                                <i class="icon icon-settings me-2"></i>Admin Panel
-                                            </a>
-                                        </li>
-                                    @endif
-                                    <li>
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                            <i class="icon icon-user me-2"></i>My Profile
+                                            My Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('cart.index') }}">
+                                            <i class="icon icon-cart"></i>Cart
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                            <i class="icon icon-cart me-2"></i>My Orders
+                                            <i class="icon icon-cart"></i>My Orders
                                         </a>
                                     </li>
                                     <li>

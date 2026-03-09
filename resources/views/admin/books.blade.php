@@ -14,7 +14,7 @@
 
 
 @section('content')
-    <!-- Leads Table -->
+    <!-- Books Table -->
     <div class="col-lg-12">
         <div class="card stretch stretch-full">
             <div class="card-body p-0">
@@ -30,18 +30,14 @@
                                         </div>
                                     </div>
                                 </th>
-                                {{-- <th>Book ID</th> --}}
+                                <th>Image</th>
                                 <th>Title</th>
                                 <th>Author</th>
                                 <th>ISBN</th>
                                 <th>Price</th>
                                 <th>Stock</th>
-                                {{-- <th>Source</th>
-                                <th>Phone</th> --}}
                                 <th>Date Added</th>
                                 <th>Actions</th>
-                                {{-- <th>Status</th>
-                                <th class="text-end">Actions</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -58,134 +54,97 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.books.show', $book) }}" class="hstack gap-3">
-                                            {{-- @if($lead->avatar) --}}
-                                            {{-- <div class="avatar-image avatar-md">
-                                                <img src="{{ asset('images/book_images/book-placeholder.png') }}"
-                                                    alt="user-image" class="img-fluid">
-                                            </div> --}}
-                                            {{-- @else
-                                            <div class="avatar-image avatar-md bg-{{ $lead->avatar_color }} text-white">
-                                                {{ substr($lead->name, 0, 1) }}
-                                            </div>
-                                            @endif --}}
-                                            <div>
-                                                <span class="text-truncate-1-line">{{ $book->title }}</span>
+                                            <div class="avatar-image avatar-md" style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden;">
+                                                @if(!empty($book->cover_image) && file_exists(public_path('storage/' . $book->cover_image)))
+                                                    <img src="{{ asset('storage/' . $book->cover_image) }}"
+                                                        alt="{{ $book->title }} cover"
+                                                        class="img-fluid"
+                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                @else
+                                                    <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light" 
+                                                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                                        <span class="text-white fw-bold">{{ strtoupper(substr($book->title, 0, 1)) }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </a>
                                     </td>
-                                    {{-- <td>{{ $book->id }}</td> --}}
-                                    {{-- <td>{{ $book->title }}</td> --}}
+                                    <td>
+                                        <a href="{{ route('admin.books.show', $book) }}" class="text-decoration-none">
+                                            <span class="text-truncate-1-line fw-bold">{{ $book->title }}</span>
+                                            @if($book->subtitle)
+                                                <small class="text-muted d-block">{{ $book->subtitle }}</small>
+                                            @endif
+                                        </a>
+                                    </td>
                                     <td>{{ $book->author }}</td>
                                     <td>{{ $book->isbn }}</td>
-                                    <td>{{ $book->price }}</td>
-                                    <td>{{ $book->stock_quantity }}</td>
-                                    {{-- <td>
-                                        <div class="hstack gap-2">
-                                            <div class="avatar-text avatar-sm">
-                                                <i class="feather-{{ $lead->source_icon }}"></i>
-                                            </div>
-                                            <a href="javascript:void(0);">{{ $lead->source }}</a>
+                                    <td>
+                                        <span class="fw-bold text-success">₱{{ number_format($book->price, 2) }}</span>
+                                    </td>
+                                    <td>
+                                        @if($book->stock_quantity > 10)
+                                            <span class="badge bg-success">{{ $book->stock_quantity }} in stock</span>
+                                        @elseif($book->stock_quantity > 0)
+                                            <span class="badge bg-warning text-dark">{{ $book->stock_quantity }} low stock</span>
+                                        @else
+                                            <span class="badge bg-danger">Out of stock</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span>{{ $book->created_at->format('M d, Y') }}</span>
+                                            <small class="text-muted">{{ $book->created_at->format('h:i A') }}</small>
                                         </div>
                                     </td>
-                                    <td><a href="tel:{{ $lead->phone }}">{{ $lead->phone }}</a></td> --}}
-                                    <td>{{ $book->created_at->format('Y-m-d, h:iA') }}</td>
-
                                     <td>
                                         <div class="hstack gap-2 justify-content-end">
-                                            <a href="{{ route('admin.books.show', $book->id) }}" class="avatar-text avatar-md">
+                                            <a href="{{ route('admin.books.show', $book->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="View Book">
                                                 <i class="feather feather-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.books.edit', $book->id) }}" class="avatar-text avatar-md">
+                                            <a href="{{ route('admin.books.edit', $book->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Edit Book">
                                                 <i class="feather feather-edit"></i>
                                             </a>
-                                            <form action="{{ route('admin.books.destroy', $book) }}" method="POST"
-                                                onsubmit="return confirm('Are you sure you want to delete this book? This action cannot be undone.');"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="avatar-text avatar-md"
-                                                    style="cursor: pointer;">
-                                                    <i class="feather feather-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-
-                                    {{-- <td>
-                                        <select class="form-control status-select" data-lead-id="{{ $lead->id }}"
-                                            data-select2-selector="status">
-                                            <option value="primary" data-bg="bg-primary" {{ $lead->status == 'new' ? 'selected'
-                                                : '' }}>New</option>
-                                            <option value="warning" data-bg="bg-warning" {{ $lead->status == 'working' ?
-                                                'selected' : '' }}>Working</option>
-                                            <option value="success" data-bg="bg-success" {{ $lead->status == 'qualified' ?
-                                                'selected' : '' }}>Qualified</option>
-                                            <option value="danger" data-bg="bg-danger" {{ $lead->status == 'declined' ?
-                                                'selected' : '' }}>Declined</option>
-                                            <option value="teal" data-bg="bg-teal" {{ $lead->status == 'customer' ? 'selected' :
-                                                '' }}>Customer</option>
-                                            <option value="indigo" data-bg="bg-indigo" {{ $lead->status == 'contacted' ?
-                                                'selected' : '' }}>Contacted</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <div class="hstack gap-2 justify-content-end">
-                                            <a href="{{ route('leads.show', $lead->id) }}" class="avatar-text avatar-md">
-                                                <i class="feather feather-eye"></i>
-                                            </a>
                                             <div class="dropdown">
-                                                <a href="javascript:void(0)" class="avatar-text avatar-md"
-                                                    data-bs-toggle="dropdown" data-bs-offset="0,21">
+                                                <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="dropdown" data-bs-offset="0,21">
                                                     <i class="feather feather-more-horizontal"></i>
                                                 </a>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item" href="{{ route('leads.edit', $lead->id) }}">
+                                                        <a class="dropdown-item" href="{{ route('admin.books.show', $book->id) }}">
+                                                            <i class="feather feather-eye me-3"></i>
+                                                            <span>View Details</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('admin.books.edit', $book->id) }}">
                                                             <i class="feather feather-edit-3 me-3"></i>
-                                                            <span>Edit</span>
+                                                            <span>Edit Book</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item printBTN" href="javascript:void(0)"
-                                                            onclick="window.print()">
-                                                            <i class="feather feather-printer me-3"></i>
-                                                            <span>Print</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0)"
-                                                            onclick="setReminder({{ $lead->id }})">
-                                                            <i class="feather feather-clock me-3"></i>
-                                                            <span>Remind</span>
+                                                        <a class="dropdown-item" href="javascript:void(0)" onclick="duplicateBook({{ $book->id }})">
+                                                            <i class="feather feather-copy me-3"></i>
+                                                            <span>Duplicate</span>
                                                         </a>
                                                     </li>
                                                     <li class="dropdown-divider"></li>
                                                     <li>
-                                                        <a class="dropdown-item" href="javascript:void(0)"
-                                                            onclick="archiveLead({{ $lead->id }})">
-                                                            <i class="feather feather-archive me-3"></i>
-                                                            <span>Archive</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0)"
-                                                            onclick="reportSpam({{ $lead->id }})">
-                                                            <i class="feather feather-alert-octagon me-3"></i>
-                                                            <span>Report Spam</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="dropdown-divider"></li>
-                                                    <li>
-                                                        <a class="dropdown-item text-danger" href="javascript:void(0)"
-                                                            onclick="deleteLead({{ $lead->id }})">
-                                                            <i class="feather feather-trash-2 me-3"></i>
-                                                            <span>Delete</span>
-                                                        </a>
+                                                        <form action="{{ route('admin.books.destroy', $book) }}" method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this book? This action cannot be undone.');"
+                                                            class="d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger" style="width: 100%;">
+                                                                <i class="feather feather-trash-2 me-3"></i>
+                                                                <span>Delete Book</span>
+                                                            </button>
+                                                        </form>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
-                                    </td> --}}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -196,22 +155,44 @@
     </div>
 @endsection
 
-{{--
-<script src="{{  asset('duralex/vendors/js/vendors.min.js') }}"></script> --}}
-<!-- vendors.min.js {always must need to be top} -->
 @section('scripts')
     <script src="{{ asset('duralex/vendors/js/dataTables.min.js') }}"></script>
-    <script src="{{  asset('duralex/vendors/js/dataTables.bs5.min.js') }}"></script>
-    <script src="{{  asset('duralex/vendors/js/select2.min.js') }}"></script>
-    <script src="{{  asset('duralex/vendors/js/select2-active.min.js') }}"></script>
-    <!--! END: Vendors JS !-->
-    <!--! BEGIN: Apps Init  !-->
-    {{--
-    <script src="{{ asset('duralex/js/common-init.min.js') }}"></script> --}}
-    {{--
-    <script src="{{ asset('duralex/js/leads-init.min.js') }}"></script> --}}
-    <!--! END: Apps Init !-->
-    <!--! BEGIN: Theme Customizer  !-->
-    {{--
-    <script src="{{  asset('duralex/js/theme-customizer-init.min.js') }}"></script> --}}
+    <script src="{{ asset('duralex/vendors/js/dataTables.bs5.min.js') }}"></script>
+    <script src="{{ asset('duralex/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('duralex/vendors/js/select2-active.min.js') }}"></script>
+    
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
+        // Function to duplicate book
+        function duplicateBook(bookId) {
+            if(confirm('Duplicate this book?')) {
+                // Add AJAX call here to duplicate book
+                fetch('/admin/books/' + bookId + '/duplicate', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+
+        // Check all functionality
+        document.getElementById('checkAllLead').addEventListener('change', function(e) {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = e.target.checked;
+            });
+        });
+    </script>
 @endsection

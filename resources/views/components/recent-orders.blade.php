@@ -16,17 +16,36 @@
                             </th>
                             <th>Customer</th>
                             <th>Email</th>
-                            {{-- <th>Source</th>
-                            <th>Phone</th> --}}
                             <th>Date</th>
-                            {{-- <th>Status</th>
-                            <th class="text-end">Actions</th> --}}
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($recentOrders as $order)
                         @php
-                            $orderItem = $order->orderItems[0]
+                            $orderItem = $order->orderItems[0] ?? null;
+                            
+                            // Determine status based on order status
+                            $statusClass = 'secondary';
+                            $statusText = 'Pending';
+                            
+                            if($order->status == 'completed') {
+                                $statusClass = 'success';
+                                $statusText = 'Completed';
+                            } elseif($order->status == 'processing') {
+                                $statusClass = 'primary';
+                                $statusText = 'Processing';
+                            } elseif($order->status == 'shipped') {
+                                $statusClass = 'info';
+                                $statusText = 'Shipped';
+                            } elseif($order->status == 'cancelled') {
+                                $statusClass = 'danger';
+                                $statusText = 'Cancelled';
+                            } elseif($order->status == 'refunded') {
+                                $statusClass = 'warning';
+                                $statusText = 'Refunded';
+                            }
                         @endphp
                         <tr class="single-item">
                             <td>
@@ -38,94 +57,37 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="" class="hstack gap-3">
-                                    {{-- @if($lead->avatar) --}}
-                                        <div class="avatar-image avatar-md">
-                                            <img src="{{ empty($order->user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $order->user->profile_photo) }}" alt="user-image" class="img-fluid">
-                                        </div>
-                                    {{-- @else
-                                        <div class="avatar-image avatar-md bg-{{ $lead->avatar_color }} text-white">
-                                            {{ substr($lead->name, 0, 1) }}
-                                        </div>
-                                    @endif --}}
+                                <a href="{{ route('orders.show', $order->id) }}" class="hstack gap-3">
+                                    <div class="avatar-image avatar-md">
+                                        <img src="{{ empty($order->user->profile_photo) ? asset('duralex/images/profile_default.png') : asset('storage/' . $order->user->profile_photo) }}" alt="user-image" class="img-fluid rounded-circle">
+                                    </div>
                                     <div>
-                                        <span class="text-truncate-1-line">{{ $order->user->name }}</span>
+                                        <span class="text-truncate-1-line fw-bold">{{ $order->user->name }}</span>
+                                        @if($orderItem)
+                                            <small class="text-muted d-block">Order #: {{ $order->order_number ?? $order->id }}</small>
+                                        @endif
                                     </div>
                                 </a>
                             </td>
                             <td>{{ $order->user->email }}</td>
-                            {{-- <td>
-                                <div class="hstack gap-2">
-                                    <div class="avatar-text avatar-sm">
-                                        <i class="feather-{{ $lead->source_icon }}"></i>
-                                    </div>
-                                    <a href="javascript:void(0);">{{ $lead->source }}</a>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <span>{{ $order->created_at->format('M d, Y') }}</span>
+                                    <small class="text-muted">{{ $order->created_at->format('h:i A') }}</small>
                                 </div>
                             </td>
-                            <td><a href="tel:{{ $lead->phone }}">{{ $lead->phone }}</a></td> --}}
-                            <td>{{ $order->created_at->format('Y-m-d, h:iA') }}</td>
-                            {{-- <td>
-                                <select class="form-control status-select" data-lead-id="{{ $lead->id }}" data-select2-selector="status">
-                                    <option value="primary" data-bg="bg-primary" {{ $lead->status == 'new' ? 'selected' : '' }}>New</option>
-                                    <option value="warning" data-bg="bg-warning" {{ $lead->status == 'working' ? 'selected' : '' }}>Working</option>
-                                    <option value="success" data-bg="bg-success" {{ $lead->status == 'qualified' ? 'selected' : '' }}>Qualified</option>
-                                    <option value="danger" data-bg="bg-danger" {{ $lead->status == 'declined' ? 'selected' : '' }}>Declined</option>
-                                    <option value="teal" data-bg="bg-teal" {{ $lead->status == 'customer' ? 'selected' : '' }}>Customer</option>
-                                    <option value="indigo" data-bg="bg-indigo" {{ $lead->status == 'contacted' ? 'selected' : '' }}>Contacted</option>
-                                </select>
+                            <td>
+                                <span class="badge bg-{{ $statusClass }} px-3 py-2">
+                                    {{ $statusText }}
+                                </span>
                             </td>
                             <td>
                                 <div class="hstack gap-2 justify-content-end">
-                                    <a href="{{ route('leads.show', $lead->id) }}" class="avatar-text avatar-md">
+                                    <a href="{{ route('admin.orderShow', $order->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="View Order">
                                         <i class="feather feather-eye"></i>
                                     </a>
-                                    <div class="dropdown">
-                                        <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="dropdown" data-bs-offset="0,21">
-                                            <i class="feather feather-more-horizontal"></i>
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a class="dropdown-item" href="{{ route('leads.edit', $lead->id) }}">
-                                                    <i class="feather feather-edit-3 me-3"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item printBTN" href="javascript:void(0)" onclick="window.print()">
-                                                    <i class="feather feather-printer me-3"></i>
-                                                    <span>Print</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="setReminder({{ $lead->id }})">
-                                                    <i class="feather feather-clock me-3"></i>
-                                                    <span>Remind</span>
-                                                </a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="archiveLead({{ $lead->id }})">
-                                                    <i class="feather feather-archive me-3"></i>
-                                                    <span>Archive</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="reportSpam({{ $lead->id }})">
-                                                    <i class="feather feather-alert-octagon me-3"></i>
-                                                    <span>Report Spam</span>
-                                                </a>
-                                            </li>
-                                            <li class="dropdown-divider"></li>
-                                            <li>
-                                                <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteLead({{ $lead->id }})">
-                                                    <i class="feather feather-trash-2 me-3"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
-                            </td> --}}
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -12,9 +12,9 @@
                         <h3 class="fs-13 fw-semibold text-truncate-1-line">Revenue</h3>
                     </div>
                 </div>
-                <a href="javascript:void(0);" class="">
+                {{-- <a href="javascript:void(0);" class="">
                     <i class="feather-arrow-right"></i>
-                </a>
+                </a> --}}
             </div>
             {{-- <div class="pt-4">
                 <div class="d-flex align-items-center justify-content-between">
@@ -46,9 +46,9 @@
                         <h3 class="fs-13 fw-semibold text-truncate-1-line">User Count</h3>
                     </div>
                 </div>
-                <a href="javascript:void(0);" class="">
+                {{-- <a href="javascript:void(0);" class="">
                     <i class="feather-arrow-right"></i>
-                </a>
+                </a> --}}
             </div>
             {{-- <div class="pt-4">
                 <div class="d-flex align-items-center justify-content-between">
@@ -80,7 +80,7 @@
                         <h3 class="fs-13 fw-semibold text-truncate-1-line">Order Count</h3>
                     </div>
                 </div>
-                <a href="javascript:void(0);" class="">
+                <a href="{{  route('admin.orders', 'pending') }}" class="">
                     <i class="feather-arrow-right"></i>
                 </a>
             </div>

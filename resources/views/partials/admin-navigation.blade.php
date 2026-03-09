@@ -24,7 +24,7 @@
                     </ul>
                 </li>
 
-                <!-- Reports -->
+                <!-- Books and Categories -->
                 <li class="nxl-item nxl-hasmenu">
                     <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-book"></i></span>
@@ -37,7 +37,7 @@
                     </ul>
                 </li>
 
-                <!-- Applications -->
+                <!-- Orders -->
                 <li class="nxl-item nxl-hasmenu">
                     <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="feather-send"></i></span>
@@ -48,6 +48,18 @@
                         <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.orders', 'pending') }}">Pendings</a></li>
                         <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.orders', 'processing') }}">Processing</a></li>
                         <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.orders', 'completed') }}">Completed</a></li>
+                    </ul>
+                </li>
+
+                {{-- Users --}}
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-users"></i></span>
+                        <span class="nxl-mtext">Users</span>
+                        <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.users', 'customer') }}">Customers</a></li>
                     </ul>
                 </li>
 
