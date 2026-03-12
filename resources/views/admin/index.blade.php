@@ -1,49 +1,54 @@
 @extends('layouts.admin-layout')
 
 @section('content')
-    <div class="row">
-        <!-- Invoices Awaiting Payment -->
+    <div class="row g-4">
+
+        {{-- Stats Cards --}}
         @include('components.stats-card')
 
-        <!-- Payment Records -->
+        {{-- Order Status Summary --}}
+        @include('components.order-status-summary')
+
+        {{-- Recent Orders --}}
         @include('components.recent-orders')
 
-        {{-- <!-- Total Sales -->
-        @include('dashboard.partials.total-sales')
+        {{-- Recent Reviews --}}
+        @include('components.recent-reviews')
 
-        <!-- Mini Stats -->
-        @include('dashboard.partials.mini-stats')
-
-        <!-- Leads Overview -->
-        @include('dashboard.partials.leads-overview')
-
-        <!-- Latest Leads -->
-        @include('dashboard.partials.latest-leads')
-
-        <!-- Upcoming Schedule -->
-        @include('dashboard.partials.upcoming-schedule')
-
-        <!-- Project Status -->
-        @include('dashboard.partials.project-status')
-
-        <!-- Team Progress -->
-        @include('dashboard.partials.team-progress')
-        --}}
     </div>
 @endsection
 
 @section('scripts')
     <script src="{{ asset('duralex/vendors/js/dataTables.min.js') }}"></script>
-    <script src="{{  asset('duralex/vendors/js/dataTables.bs5.min.js') }}"></script>
-    <script src="{{  asset('duralex/vendors/js/select2.min.js') }}"></script>
-    <script src="{{  asset('duralex/vendors/js/select2-active.min.js') }}"></script>
-    <!--! END: Vendors JS !-->
-    <!--! BEGIN: Apps Init  !-->
-    {{--
-    <script src="{{ asset('duralex/js/common-init.min.js') }}"></script> --}}
-    {{-- <script src="{{ asset('duralex/js/leads-init.min.js') }}"></script> --}}
-    <!--! END: Apps Init !-->
-    <!--! BEGIN: Theme Customizer  !-->
-    {{--
-    <script src="{{  asset('duralex/js/theme-customizer-init.min.js') }}"></script> --}}
+    <script src="{{ asset('duralex/vendors/js/dataTables.bs5.min.js') }}"></script>
+    <script src="{{ asset('duralex/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('duralex/vendors/js/select2-active.min.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            // Use unique IDs (dashboardOrderList, dashboardReviewList) that
+            // common-init.min.js won't auto-initialize
+            $('#dashboardOrderList').DataTable({
+                pageLength: 10,
+                ordering: true,
+                searching: true,
+                info: true,
+                lengthChange: true,
+                order: [[5, 'desc']]
+            });
+
+            $('#dashboardReviewList').DataTable({
+                pageLength: 8,
+                ordering: true,
+                searching: true,
+                info: true,
+                lengthChange: false,
+                order: [[4, 'desc']]
+            });
+
+            // Tooltips
+            document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                new bootstrap.Tooltip(el);
+            });
+        });
+    </script>
 @endsection

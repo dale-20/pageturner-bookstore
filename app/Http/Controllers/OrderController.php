@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Book;
+use App\Models\User;
+use App\Notifications\OrderPlacedNotification;
+use App\Notifications\OrderStatusChangedNotification;
+use App\Notifications\NewOrderAdminNotification;
 
 class OrderController extends Controller
 {
@@ -16,90 +20,84 @@ class OrderController extends Controller
     {
         $user = auth()->user();
 
-        // Base query
-        $query = Order::with(['orderItems.book']) // Eager load relationships
+        $query = Order::with(['orderItems.book'])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc');
 
-        // Optional status filter
         if ($request->has('status') && in_array($request->status, ['pending', 'processing', 'completed', 'cancelled'])) {
             $query->where('status', $request->status);
         }
 
-        // Get paginated orders
         $orders = $query->paginate(10);
 
-        // Calculate additional stats for the view
         $totalOrders = Order::where('user_id', $user->id)->count();
         $totalSpent = Order::where('user_id', $user->id)
-            ->whereIn('status', ['completed']) // Only count paid orders
+            ->whereIn('status', ['completed'])
             ->sum('total_amount');
 
-        // Get counts by status for the filter tabs
         $statusCounts = [
-            'pending' => Order::where('user_id', $user->id)->where('status', 'pending')->count(),
+            'pending'    => Order::where('user_id', $user->id)->where('status', 'pending')->count(),
             'processing' => Order::where('user_id', $user->id)->where('status', 'processing')->count(),
-            'completed' => Order::where('user_id', $user->id)->where('status', 'completed')->count(),
-            'cancelled' => Order::where('user_id', $user->id)->where('status', 'cancelled')->count(),
+            'completed'  => Order::where('user_id', $user->id)->where('status', 'completed')->count(),
+            'cancelled'  => Order::where('user_id', $user->id)->where('status', 'cancelled')->count(),
         ];
 
-        // Get recent activity
         $recentOrders = Order::where('user_id', $user->id)
             ->where('created_at', '>=', now()->subDays(30))
             ->count();
 
         return view('order.index', compact(
-            'orders',
-            'totalOrders',
-            'totalSpent',
-            'statusCounts',
-            'recentOrders'
+            'orders', 'totalOrders', 'totalSpent', 'statusCounts', 'recentOrders'
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
+     * Notifies: customer (order placed) + all admins (new order).
      */
     public function store(Request $request)
     {
         $cart = session()->get('cart');
 
         $totalAmount = 0;
-
         foreach ($cart as $item) {
             $totalAmount += $item['price'] * $item['quantity'];
         }
 
         $order = Order::create([
-            'user_id' => auth()->user()->id,
+            'user_id'      => auth()->user()->id,
             'total_amount' => $totalAmount,
         ]);
 
+        $lastBook = null;
         foreach ($cart as $bookID => $item) {
             OrderItem::create([
-                'order_id' => $order->id,
-                'book_id' => $bookID,
-                'quantity' => $item['quantity'],
-                'unit_price' => $item['price']
+                'order_id'   => $order->id,
+                'book_id'    => $bookID,
+                'quantity'   => $item['quantity'],
+                'unit_price' => $item['price'],
             ]);
 
-            $book = Book::find($bookID);
-            $book->decrement('stock_quantity', $item['quantity']);
-
+            $lastBook = Book::find($bookID);
+            $lastBook->decrement('stock_quantity', $item['quantity']);
         }
-
 
         session()->forget('cart');
 
-        return redirect()->route("cart.index", $book)->with("success", "Order placed successfully");
+        // Load relationships needed for notifications
+        $order->load(['user', 'orderItems']);
+
+        // Notify the customer
+        auth()->user()->notify(new OrderPlacedNotification($order));
+
+        // Notify all admins
+        User::where('role', 'admin')->each(function ($admin) use ($order) {
+            $admin->notify(new NewOrderAdminNotification($order));
+        });
+
+        return redirect()->route('cart.index', $lastBook)->with('success', 'Order placed successfully');
     }
 
     /**
@@ -108,60 +106,55 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order = Order::find($id);
-        return view("order.show", compact("order"));
+        return view('order.show', compact('order'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    public function edit(string $id) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-
-    }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
         $order = Order::find($id);
         $order->delete();
-        return redirect()->route("orders.index", $order)->with("success", "Order ID $id deleted successfully");
+        return redirect()->route('orders.index', $order)->with('success', "Order ID $id deleted successfully");
     }
 
+    /**
+     * Change order status.
+     * Notifies: customer (status changed).
+     */
     public function changeStatus(Request $request, Order $order)
     {
         $validated = $request->validate([
             'status' => 'required',
         ]);
 
+        $oldStatus = $order->status;
+
         $order->update([
             'status' => $validated['status'],
         ]);
 
-        // Only restore stock if the order is being cancelled
+        // Restore stock on cancellation
         if ($validated['status'] === 'cancelled') {
             foreach ($order->orderItems as $orderItem) {
                 $orderItem->book->increment('stock_quantity', $orderItem->quantity);
             }
         }
 
-        if(auth()->user()->role == 'admin'){
+        // Notify the customer about the status change
+        $order->user->notify(new OrderStatusChangedNotification($order, $oldStatus));
+
+        if (auth()->user()->role === 'admin') {
             return redirect()->route('admin.orderShow', $order->id)
-            ->with('success', 'Order canceled');
+                ->with('success', 'Order status updated.');
         }
-        else{
-            return redirect()->route('orders.show', $order->id)
-            ->with('success', 'Order canceled');
-        }
+
+        return redirect()->route('orders.show', $order->id)
+            ->with('success', 'Order cancelled.');
     }
 }

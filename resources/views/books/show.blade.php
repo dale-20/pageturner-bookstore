@@ -86,7 +86,16 @@
 
             {{-- Review Form --}}
             @auth
-                @if (auth()->user()->hasPurchased($book->id))
+                @if (!auth()->user()->hasVerifiedEmail())
+                    <div class="alert alert-warning mb-4 d-flex align-items-center gap-3">
+                        <i class="bi bi-envelope-exclamation-fill fs-4"></i>
+                        <div>
+                            <strong>Email not verified.</strong>
+                            You need to verify your email address before writing a review.
+                            <a href="{{ route('verification.notice') }}" class="alert-link ms-1">Verify now &rarr;</a>
+                        </div>
+                    </div>
+                @elseif (auth()->user()->hasPurchased($book->id))
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body">
                             <h5 class="mb-3">Write a Review</h5>

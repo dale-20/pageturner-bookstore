@@ -83,13 +83,17 @@
         </div>
     </div><!--top-right-->
 
+    @php
+        $user = auth()->user();
+    @endphp
+
     <header id="header">
         <div class="container-fluid">
             <div class="row">
 
                 <div class="col-md-2">
                     <div class="main-logo">
-                        <a href={{ route('home') }}><img src="{{ asset('booksaw/images/page-turner.png') }}"
+                        <a href={{ $user ? route('dashboard') : route('home') }}><img src="{{ asset('booksaw/images/page-turner.png') }}"
                                 alt="logo"></a>
                     </div>
 
@@ -101,7 +105,8 @@
                         <div class="main-menu stellarnav">
                             <ul class="menu-list">
                                 <li class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
-                                    <a href="{{ route('home') }}">Home</a>
+                                    <a
+                                        href="{{ $user ? route('dashboard') : route('home') }}">{{ $user ? 'Dashboard' : 'Home' }}</a>
                                 </li>
                                 <li class="menu-item {{ request()->routeIs('books.index') ? 'active' : '' }}">
                                     <a href="{{ route('books.index') }}" class="nav-link">Browse</a>

@@ -123,7 +123,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center py-5">
                                         <div class="d-flex flex-column align-items-center">
-                                            <i class="feather feather-folder" style="font-size: 48px; color: #ccc;"></i>
+                                            <i class="feather feather-folder" style="font-size: 48px; color: var(--bs-secondary-color);"></i>
                                             <h5 class="mt-3">No Categories Found</h5>
                                             <p class="text-muted">Get started by creating your first category</p>
                                             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary mt-2">
@@ -225,8 +225,8 @@
 
             // Add hover effect to rows
             $('.single-item').hover(
-                function() { $(this).addClass('bg-light'); },
-                function() { $(this).removeClass('bg-light'); }
+                function() { $(this).addClass('row-hover'); },
+                function() { $(this).removeClass('row-hover'); }
             );
         });
 
@@ -242,9 +242,9 @@
     <style>
         /* Custom styles for categories table */
         #categoriesTable thead th {
-            background-color: #f8f9fa;
+            background-color: var(--bs-tertiary-bg);
             font-weight: 600;
-            color: #495057;
+            color: var(--bs-body-color);
         }
         
         #categoriesTable tbody tr:hover {
@@ -252,7 +252,7 @@
         }
         
         .dataTables_filter input {
-            border: 1px solid #dee2e6;
+            border: 1px solid var(--bs-border-color);
             border-radius: 20px;
             padding: 0.375rem 1rem;
             margin-left: 0.5rem;
@@ -265,7 +265,7 @@
         }
         
         .dataTables_length select {
-            border: 1px solid #dee2e6;
+            border: 1px solid var(--bs-border-color);
             border-radius: 4px;
             padding: 0.375rem 1.75rem 0.375rem 0.75rem;
         }
@@ -286,6 +286,15 @@
         
         .table td {
             vertical-align: middle;
+        }
+
+        /* Dark-mode aware row hover */
+        .row-hover { background-color: var(--bs-tertiary-bg) !important; }
+
+        /* DataTable header dark mode */
+        #categoriesTable thead th {
+            background-color: var(--bs-tertiary-bg) !important;
+            color: var(--bs-body-color) !important;
         }
     </style>
 @endsection

@@ -141,7 +141,7 @@
                                                      class="img-fluid rounded-circle" 
                                                      style="width: 100%; height: 100%; object-fit: cover;">
                                             @else
-                                                <span style="font-size: 24px; color: #999;">
+                                                <span style="font-size: 24px; color: var(--bs-secondary-color);">
                                                     {{ strtoupper(substr($order->user->name ?? 'U', 0, 1)) }}
                                                 </span>
                                             @endif
@@ -194,12 +194,12 @@
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
-                                    <thead class="bg-light">
+                                    <thead class="table-active">
                                         <tr>
-                                            <th class="ps-4 text-dark">Book Details</th>
-                                            <th class="text-center text-dark">Quantity</th>
-                                            <th class="text-end text-dark">Unit Price</th>
-                                            <th class="text-end pe-4 text-dark">Total</th>
+                                            <th class="ps-4">Book Details</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-end">Unit Price</th>
+                                            <th class="text-end pe-4">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -213,14 +213,9 @@
                                                                  style="width: 50px; height: 60px; object-fit: cover; border-radius: 8px;"
                                                                  class="me-3">
                                                         @else
-                                                            <div class="bg-secondary bg-opacity-10 rounded me-3 d-flex align-items-center justify-content-center"
-                                                                 style="width: 50px; height: 60px; border-radius: 8px;">
-                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2">
-                                                                    <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
-                                                                    <line x1="8" y1="9" x2="16" y2="9"></line>
-                                                                    <line x1="8" y1="13" x2="16" y2="13"></line>
-                                                                    <line x1="8" y1="17" x2="12" y2="17"></line>
-                                                                </svg>
+                                                            <div class="no-cover-placeholder rounded me-3 d-flex align-items-center justify-content-center"
+                                                                 style="width: 50px; height: 60px; border-radius: 8px; flex-shrink: 0;">
+                                                                <i class="feather-book-open" style="font-size: 1.3rem; color: var(--bs-secondary-color);"></i>
                                                             </div>
                                                         @endif
                                                         <div>
@@ -450,7 +445,7 @@
                     </div>
 
                     {{-- Order Summary Card --}}
-                    <div class="card border-0 shadow-sm" style="background: #f8f9fa; border-radius: 16px;">
+                    <div class="card border-0 shadow-sm" style="background: var(--bs-tertiary-bg); border-radius: 16px; border: 1px solid var(--bs-border-color) !important;">
                         <div class="card-body">
                             <h6 class="fw-bold mb-3">Order Summary</h6>
                             <table class="table table-sm">
@@ -516,7 +511,7 @@
             left: 60px;
             right: 60px;
             height: 2px;
-            background: #e9ecef;
+            background: var(--bs-secondary-bg);
             z-index: 1;
         }
         
@@ -580,13 +575,13 @@
         }
         
         .btn-light {
-            background: #f8f9fa;
-            border-color: #f8f9fa;
+            background: var(--bs-tertiary-bg);
+            border-color: var(--bs-border-color);
         }
         
         .btn-light:hover {
-            background: #e9ecef;
-            border-color: #e9ecef;
+            background: var(--bs-secondary-bg);
+            border-color: var(--bs-border-color);
         }
         
         .btn-success {
@@ -649,6 +644,12 @@
             .timeline-content {
                 text-align: left;
             }
+        }
+
+        /* No-cover book placeholder */
+        .no-cover-placeholder {
+            background-color: var(--bs-tertiary-bg);
+            border: 1px solid var(--bs-border-color);
         }
     </style>
 @endsection

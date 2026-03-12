@@ -24,10 +24,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $request->authenticate(); // validates credentials
+
+        $user = auth()->user();
+
+        if ($user->two_factor_enabled) {
+            // Log them back out, store their ID in session
+            auth()->logout();
+
+            session([
+                '2fa_user_id' => $user->id,
+                '2fa_type' => $user->two_factor_type,
+            ]);
+
+            return redirect()->route('two-factor.challenge');
+        }
 
         $request->session()->regenerate();
-
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -44,4 +57,5 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
 }

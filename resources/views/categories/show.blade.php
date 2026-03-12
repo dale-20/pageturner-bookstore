@@ -54,21 +54,21 @@
                                     <!-- Quick Stats -->
                                     <div class="row mt-auto">
                                         <div class="col-sm-4 mb-3">
-                                            <div class="bg-light rounded-3 p-3 text-center">
-                                                <span class="d-block fw-bold h3 mb-1">{{ $category->books_count ?? $category->books()->count() }}</span>
-                                                <span class="text-muted">Total Books</span>
+                                            <div class="stat-box rounded-3 p-3 text-center">
+                                                <span class="d-block fw-bold h3 mb-1 stat-value">{{ $category->books_count ?? $category->books()->count() }}</span>
+                                                <span class="stat-label">Total Books</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 mb-3">
-                                            <div class="bg-light rounded-3 p-3 text-center">
-                                                <span class="d-block fw-bold h3 mb-1">{{ $category->created_at->format('M d, Y') }}</span>
-                                                <span class="text-muted">Created</span>
+                                            <div class="stat-box rounded-3 p-3 text-center">
+                                                <span class="d-block fw-bold h3 mb-1 stat-value">{{ $category->created_at->format('M d, Y') }}</span>
+                                                <span class="stat-label">Created</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 mb-3">
-                                            <div class="bg-light rounded-3 p-3 text-center">
-                                                <span class="d-block fw-bold h3 mb-1">{{ $category->updated_at->format('M d, Y') }}</span>
-                                                <span class="text-muted">Last Updated</span>
+                                            <div class="stat-box rounded-3 p-3 text-center">
+                                                <span class="d-block fw-bold h3 mb-1 stat-value">{{ $category->updated_at->format('M d, Y') }}</span>
+                                                <span class="stat-label">Last Updated</span>
                                             </div>
                                         </div>
                                     </div>
@@ -114,12 +114,12 @@
                                                         @else
                                                             <div class="bg-secondary bg-opacity-10 rounded" 
                                                                  style="width: 40px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                                                <i class="feather-book" style="color: #ccc;"></i>
+                                                                <i class="feather-book" style="color: var(--bs-secondary-color);"></i>
                                                             </div>
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('admin.books.show', $book) }}" class="text-dark fw-semibold">
+                                                        <a href="{{ route('admin.books.show', $book) }}" class="fw-semibold link-body-emphasis">
                                                             {{ Str::limit($book->title, 30) }}
                                                         </a>
                                                     </td>
@@ -157,7 +157,7 @@
                                     </div>
                                 @else
                                     <div class="text-center py-5">
-                                        <i class="feather-book-open" style="font-size: 3rem; color: #ccc;"></i>
+                                        <i class="feather-book-open" style="font-size: 3rem; color: var(--bs-secondary-color);"></i>
                                         <p class="text-muted mt-3 mb-3">No books found in this category.</p>
                                         <a href="{{ route('admin.books.create', ['category_id' => $category->id]) }}" 
                                            class="btn btn-primary">
@@ -195,10 +195,19 @@
         transition: all 0.2s ease;
     }
     .avatar-text:hover {
-        background-color: #f8f9fa;
+        background-color: var(--bs-tertiary-bg);
     }
     .badge {
         font-weight: 500;
     }
+
+    /* Dark-mode aware stat boxes */
+    .stat-box {
+        background-color: var(--bs-tertiary-bg);
+        border: 1px solid var(--bs-border-color);
+        transition: background-color 0.2s;
+    }
+    .stat-value { color: var(--bs-body-color); }
+    .stat-label { font-size: 0.82rem; font-weight: 500; color: var(--bs-secondary-color); }
 </style>
 @endpush

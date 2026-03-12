@@ -45,7 +45,7 @@
                                              style="max-height: 400px; width: auto;"
                                              onerror="this.onerror=null; this.src='{{ asset('duralex/images/default-book.png') }}';">
                                     @else
-                                        <div class="d-flex align-items-center justify-content-center bg-light rounded-3 shadow-lg mx-auto" 
+                                        <div class="d-flex align-items-center justify-content-center stat-box rounded-3 shadow-lg mx-auto" 
                                              style="width: 300px; height: 400px;">
                                             <div class="text-center">
                                                 <i class="feather-book-open" style="font-size: 4rem; color: #ccc;"></i>
@@ -66,21 +66,21 @@
                                     <!-- Quick Stats -->
                                     <div class="row mb-4">
                                         <div class="col-sm-4 mb-3">
-                                            <div class="bg-light rounded-3 p-3 text-center">
-                                                <span class="d-block fw-bold h3 mb-1">${{ number_format($book->price, 2) }}</span>
-                                                <span class="text-muted">Price</span>
+                                            <div class="stat-box rounded-3 p-3 text-center">
+                                                <span class="d-block fw-bold h3 mb-1 stat-value">${{ number_format($book->price, 2) }}</span>
+                                                <span class="stat-label">Price</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 mb-3">
-                                            <div class="bg-light rounded-3 p-3 text-center">
-                                                <span class="d-block fw-bold h3 mb-1">{{ $book->stock_quantity }}</span>
-                                                <span class="text-muted">Stock Quantity</span>
+                                            <div class="stat-box rounded-3 p-3 text-center">
+                                                <span class="d-block fw-bold h3 mb-1 stat-value">{{ $book->stock_quantity }}</span>
+                                                <span class="stat-label">Stock Quantity</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-4 mb-3">
-                                            <div class="bg-light rounded-3 p-3 text-center">
-                                                <span class="d-block fw-bold h3 mb-1">{{ number_format($book->average_rating, 1) }}</span>
-                                                <span class="text-muted">Avg. Rating</span>
+                                            <div class="stat-box rounded-3 p-3 text-center">
+                                                <span class="d-block fw-bold h3 mb-1 stat-value">{{ number_format($book->average_rating, 1) }}</span>
+                                                <span class="stat-label">Avg. Rating</span>
                                             </div>
                                         </div>
                                     </div>
@@ -281,6 +281,21 @@
     .feather-star {
         width: 16px;
         height: 16px;
+    }
+
+    /* Stat boxes — respect dark/light theme */
+    .stat-box {
+        background-color: var(--bs-tertiary-bg);
+        border: 1px solid var(--bs-border-color);
+        transition: background-color 0.2s, border-color 0.2s;
+    }
+    .stat-value {
+        color: var(--bs-body-color);
+    }
+    .stat-label {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--bs-secondary-color);
     }
 </style>
 @endpush

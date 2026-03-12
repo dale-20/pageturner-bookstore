@@ -20,7 +20,7 @@
                                                         class="img-fluid"
                                                         style="width: 100%; height: 100%; object-fit: cover;">
                                                 @else
-                                                    <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light" 
+                                                    <div class="d-flex align-items-center justify-content-center w-100 h-100 stat-box" 
                                                          style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                                         <span class="text-white fw-bold">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
                                                     </div>
@@ -50,7 +50,7 @@
                             <!-- Stats Cards -->
                             <div class="row g-3 mt-2">
                                 <div class="col-md-4">
-                                    <div class="stat-card p-3 bg-light rounded-3">
+                                    <div class="stat-card p-3 stat-box rounded-3">
                                         <div class="d-flex align-items-center">
                                             <div class="stat-icon me-3">
                                                 <i class="feather feather-shopping-bag fs-2 text-primary"></i>
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="stat-card p-3 bg-light rounded-3">
+                                    <div class="stat-card p-3 stat-box rounded-3">
                                         <div class="d-flex align-items-center">
                                             <div class="stat-icon me-3">
                                                 <i class="feather feather-check-circle fs-2 text-success"></i>
@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="stat-card p-3 bg-light rounded-3">
+                                    <div class="stat-card p-3 stat-box rounded-3">
                                         <div class="d-flex align-items-center">
                                             <div class="stat-icon me-3">
                                                 <i class="feather feather-dollar-sign fs-2 text-warning"></i>
@@ -132,7 +132,7 @@
                                             </span>
                                             <small class="text-muted d-block mt-1">{{ $user->email_verified_at->format('M d, Y h:i A') }}</small>
                                         @else
-                                            <span class="badge bg-warning text-dark">Not Verified</span>
+                                            <span class="badge bg-warning">Not Verified</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -209,7 +209,7 @@
                                                     @foreach($items->skip(1) as $item)
                                                         <div class="small text-muted">
                                                             {{ $item->book->title ?? 'N/A' }}
-                                                            <span class="text-dark">x{{ $item->quantity }}</span>
+                                                            <span class="text-body">x{{ $item->quantity }}</span>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -283,3 +283,16 @@
         });
     </script>
 @endsection
+
+@push('styles')
+<style>
+    /* Dark-mode aware stat boxes */
+    .stat-box {
+        background-color: var(--bs-tertiary-bg);
+        border: 1px solid var(--bs-border-color);
+        transition: background-color 0.2s;
+    }
+    .stat-value { color: var(--bs-body-color); }
+    .stat-label { font-size: 0.82rem; font-weight: 500; color: var(--bs-secondary-color); }
+</style>
+@endpush
