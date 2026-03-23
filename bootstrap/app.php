@@ -17,10 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\CheckAdmin::class,
             'redirect.role' => \App\Http\Middleware\RedirectBasedOnRole::class,
             'redirect.books.index' => \App\Http\Middleware\RedirectBookIndex::class,
+            'verified'            => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
 
         // Add web middleware group for session, CSRF, etc.
         $middleware->web([
+            \App\Http\Middleware\EnsureTwoFactorVerified::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,

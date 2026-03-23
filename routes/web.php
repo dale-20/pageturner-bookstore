@@ -28,10 +28,10 @@ Route::middleware('throttle:10,1')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Book browsing — redirect.books.index sends admins to admin.books.index
-Route::middleware('redirect.books.index')->group(function () {
-    Route::get('/books', [BookController::class, 'index'])->name('books.index');
-    Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
-});
+// Route::middleware('redirect.books.index')->group(function () {
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+// });
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Authenticated customer routes

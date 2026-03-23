@@ -215,10 +215,13 @@ class TwoFactorController extends Controller
         // Login the user
         auth()->login($user);
 
-        // Regenerate session AFTER login to prevent session fixation
+        // Regenerate session to prevent session fixation,
+        // then IMMEDIATELY re-set the verified flag so
+        // EnsureTwoFactorVerified middleware doesn't loop them back
         session()->regenerate();
+        session(['two_factor_verified' => true]);
 
-        // Redirect based on role so middleware doesn't bounce them
+        // Redirect based on role
         if ($user->isAdmin()) {
             return redirect()->intended(route('admin.dashboard'));
         }

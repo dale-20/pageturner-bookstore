@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -30,20 +31,30 @@ class ProfileController extends Controller
 
         $user->fill($request->safe()->only(['name', 'email']));
 
+        // If email changed, revoke verification so user must re-verify
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         if ($request->filled('password')) {
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
+
+            $user->save();
+
+            // Log out all other browser sessions on password change
+            Auth::logoutOtherDevices($request->password);
+
+            // Regenerate the current session to stay logged in safely
+            $request->session()->regenerate();
+        } else {
+            $user->save();
         }
 
         if ($request->hasFile('profile_photo')) {
             $user->profile_photo = $request->file('profile_photo')
                 ->store('profile-photos', 'public');
+            $user->save();
         }
-
-        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

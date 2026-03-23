@@ -24,26 +24,26 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate(); // validates credentials
+        $request->authenticate(); // validates credentials + rate-limits via LoginRequest
 
         $user = auth()->user();
 
         if ($user->two_factor_enabled) {
-            // Log them back out, store their ID in session
+            // Log them back out, store pending user ID in session for the challenge
             auth()->logout();
 
             session([
-                '2fa_user_id' => $user->id,
-                '2fa_type' => $user->two_factor_type,
+                '2fa_user_id'  => $user->id,
+                '2fa_type'     => $user->two_factor_type,
             ]);
 
             return redirect()->route('two-factor.challenge');
         }
 
-        // Regenerate session to prevent session fixation
+        // Regenerate session to prevent session fixation attacks
         $request->session()->regenerate();
 
-        // No 2FA on this account — mark as verified so middleware doesn't loop
+        // Mark 2FA as not required (user has no 2FA enabled)
         session(['two_factor_verified' => true]);
 
         return redirect()->intended(route('dashboard', absolute: false));
