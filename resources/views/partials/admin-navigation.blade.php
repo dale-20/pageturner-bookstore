@@ -63,6 +63,13 @@
                     </ul>
                 </li>
 
+                <li class="nxl-item">
+                    <a href="{{ route('admin.audit.index') }}" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-shield"></i></span>
+                        <span class="nxl-mtext">Audit Logs</span>
+                    </a>
+                </li>
+
               
             </ul>
 

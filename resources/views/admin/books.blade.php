@@ -6,6 +6,16 @@
 
 
 @section('add-features')
+    <a href="{{ route('admin.import.form') }}" class="btn btn-sm btn-success">
+        <i data-feather="download" class="me-1" style="width:14px; height:14px;"></i>
+        <span>Import</span>
+    </a>
+
+    <a href="{{ route('admin.export.form') }}" class="btn btn-sm btn-secondary">
+        <i data-feather="upload" class="me-1" style="width:14px; height:14px;"></i>
+        <span>Export</span>
+    </a>
+
     <a href="{{ route('admin.books.create') }}" class="btn btn-primary">
         <i class="feather-plus me-2"></i>
         <span>Create Book</span>
@@ -54,16 +64,17 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.books.show', $book) }}" class="hstack gap-3">
-                                            <div class="avatar-image avatar-md" style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden;">
+                                            <div class="avatar-image avatar-md"
+                                                style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden;">
                                                 @if(!empty($book->cover_image) && file_exists(public_path('storage/' . $book->cover_image)))
                                                     <img src="{{ asset('storage/' . $book->cover_image) }}"
-                                                        alt="{{ $book->title }} cover"
-                                                        class="img-fluid"
+                                                        alt="{{ $book->title }} cover" class="img-fluid"
                                                         style="width: 100%; height: 100%; object-fit: cover;">
                                                 @else
-                                                    <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light" 
-                                                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                                        <span class="text-white fw-bold">{{ strtoupper(substr($book->title, 0, 1)) }}</span>
+                                                    <div class="d-flex align-items-center justify-content-center w-100 h-100 bg-light"
+                                                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                                        <span
+                                                            class="text-white fw-bold">{{ strtoupper(substr($book->title, 0, 1)) }}</span>
                                                     </div>
                                                 @endif
                                             </div>
@@ -99,31 +110,37 @@
                                     </td>
                                     <td>
                                         <div class="hstack gap-2 justify-content-end">
-                                            <a href="{{ route('admin.books.show', $book->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="View Book">
+                                            <a href="{{ route('admin.books.show', $book->id) }}" class="avatar-text avatar-md"
+                                                data-bs-toggle="tooltip" title="View Book">
                                                 <i class="feather feather-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.books.edit', $book->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Edit Book">
+                                            <a href="{{ route('admin.books.edit', $book->id) }}" class="avatar-text avatar-md"
+                                                data-bs-toggle="tooltip" title="Edit Book">
                                                 <i class="feather feather-edit"></i>
                                             </a>
                                             <div class="dropdown">
-                                                <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="dropdown" data-bs-offset="0,21">
+                                                <a href="javascript:void(0)" class="avatar-text avatar-md"
+                                                    data-bs-toggle="dropdown" data-bs-offset="0,21">
                                                     <i class="feather feather-more-horizontal"></i>
                                                 </a>
                                                 <ul class="dropdown-menu">
                                                     <li>
-                                                        <a class="dropdown-item" href="{{ route('admin.books.show', $book->id) }}">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.books.show', $book->id) }}">
                                                             <i class="feather feather-eye me-3"></i>
                                                             <span>View Details</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="{{ route('admin.books.edit', $book->id) }}">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.books.edit', $book->id) }}">
                                                             <i class="feather feather-edit-3 me-3"></i>
                                                             <span>Edit Book</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="javascript:void(0)" onclick="duplicateBook({{ $book->id }})">
+                                                        <a class="dropdown-item" href="javascript:void(0)"
+                                                            onclick="duplicateBook({{ $book->id }})">
                                                             <i class="feather feather-copy me-3"></i>
                                                             <span>Duplicate</span>
                                                         </a>
@@ -135,7 +152,8 @@
                                                             class="d-inline">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger" style="width: 100%;">
+                                                            <button type="submit" class="dropdown-item text-danger"
+                                                                style="width: 100%;">
                                                                 <i class="feather feather-trash-2 me-3"></i>
                                                                 <span>Delete Book</span>
                                                             </button>
@@ -160,7 +178,11 @@
     <script src="{{ asset('duralex/vendors/js/dataTables.bs5.min.js') }}"></script>
     <script src="{{ asset('duralex/vendors/js/select2.min.js') }}"></script>
     <script src="{{ asset('duralex/vendors/js/select2-active.min.js') }}"></script>
-    
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        feather.replace();
+    </script>
+
     <script>
         // Initialize tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -170,7 +192,7 @@
 
         // Function to duplicate book
         function duplicateBook(bookId) {
-            if(confirm('Duplicate this book?')) {
+            if (confirm('Duplicate this book?')) {
                 // Add AJAX call here to duplicate book
                 fetch('/admin/books/' + bookId + '/duplicate', {
                     method: 'POST',
@@ -178,17 +200,17 @@
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.success) {
-                        location.reload();
-                    }
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
             }
         }
 
         // Check all functionality
-        document.getElementById('checkAllLead').addEventListener('change', function(e) {
+        document.getElementById('checkAllLead').addEventListener('change', function (e) {
             const checkboxes = document.querySelectorAll('.checkbox');
             checkboxes.forEach(checkbox => {
                 checkbox.checked = e.target.checked;

@@ -7,9 +7,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "laravel/framework": "^12.0",
+        "laravel/horizon": "^5.46",
+        "laravel/telescope": "^5.20",
         "laravel/tinker": "^2.10.1",
-        "pragmarx/google2fa-laravel": "^2.3"
+        "maatwebsite/excel": "^3.1",
+        "owen-it/laravel-auditing": "^14.0",
+        "pragmarx/google2fa-laravel": "^2.3",
+        "spatie/laravel-backup": "^10.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

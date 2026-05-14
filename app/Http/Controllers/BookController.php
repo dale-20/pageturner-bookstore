@@ -93,7 +93,7 @@ class BookController extends Controller
 
         $book->update($validated);
 
-        return redirect()->route('books.show', $book)
+        return redirect()->route('admin.books.show', $book)
             ->with('success', 'Book updated successfully!');
 
     }

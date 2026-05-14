@@ -10,6 +10,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\ImportExportController;
+use App\Http\Controllers\AuditLogController;
 use Illuminate\Support\Facades\Route;
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -28,10 +30,10 @@ Route::middleware('throttle:10,1')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Book browsing — redirect.books.index sends admins to admin.books.index
-// Route::middleware('redirect.books.index')->group(function () {
-Route::get('/books', [BookController::class, 'index'])->name('books.index');
-Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
-// });
+Route::middleware('redirect.books.index')->group(function () {
+    Route::get('/books', [BookController::class, 'index'])->name('books.index');
+    Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+});
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Authenticated customer routes
@@ -88,7 +90,7 @@ Route::middleware(['auth', 'verified', 'redirect.role'])->group(function () {
 //   Email-verified gate intentionally omitted for admins (trusted accounts).
 //   Mutating endpoints throttled at 30 req/minute to prevent bulk abuse.
 // ──────────────────────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin', 'redirect.books.index'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -130,6 +132,34 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::patch('/users/{user}', [AdminDashboardController::class, 'userUpdate'])->name('users.update');
         Route::delete('/users/{user}', [AdminDashboardController::class, 'userDestroy'])->name('users.destroy');
     });
+
+    // Import And Export Forms
+    Route::get('/import', [ImportExportController::class, 'showImportForm'])->name('import.form');
+    Route::get('/import/logs', [ImportExportController::class, 'importLogs'])->name('import.logs');
+    Route::post('/import/books', [ImportExportController::class, 'importBooks'])->name('import.books');
+    Route::get('/import/status/{id}', [ImportExportController::class, 'getImportStatus'])->name('import.status');
+    Route::get('/import/recent', [ImportExportController::class, 'recentImports'])->name('import.recent');
+    Route::get('/export', [ImportExportController::class, 'showExportForm'])->name('export.form');
+    Route::get('/export/logs', [ImportExportController::class, 'exportLogs'])->name('export.logs');
+    Route::get('/export/books', [ImportExportController::class, 'exportBooks'])->name('export.books');
+    Route::get('/export/orders', [ImportExportController::class, 'exportOrders'])->name('export.orders');
+    Route::get('/export/template', [ImportExportController::class, 'downloadTemplate'])->name('export.template');
+    Route::prefix('api')->middleware(['throttle.tiered'])->group(function () {
+        Route::get('/books', [BookController::class, 'index']);
+        Route::get('/books/{book}', [BookController::class, 'show']);
+
+        // Protected API routes with premium tier
+        Route::middleware(['auth:sanctum', 'throttle.tiered:premium'])->group(function () {
+            Route::get('/user/orders', [OrderController::class, 'index']);
+            Route::post('/orders', [OrderController::class, 'store']);
+        });
+    });
+
+    Route::get('/audit-logs/export/csv', [AuditLogController::class, 'export'])->name('audit.export');
+    Route::get('/audit-logs/verify/integrity', [AuditLogController::class, 'verifyIntegrity'])->name('audit.verify');
+    Route::get('/audit-logs/stats/json', [AuditLogController::class, 'stats'])->name('audit.stats');
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit.index');
+    Route::get('/audit-logs/{id}', [AuditLogController::class, 'show'])->whereNumber('id')->name('audit.show');
 });
 
 require __DIR__ . '/auth.php';
