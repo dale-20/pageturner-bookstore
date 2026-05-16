@@ -3,7 +3,6 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DashboardController;
@@ -12,6 +11,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -82,6 +83,10 @@ Route::middleware(['auth', 'verified', 'redirect.role'])->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 });
 
+Route::prefix('api')->name('api.')->middleware(['auth', 'throttle.tiered:standard'])->group(function () {
+    Route::get('/user/orders', [OrderApiController::class, 'index'])->name('user.orders');
+});
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Admin-only routes
 //   auth  — must be logged in
@@ -144,17 +149,6 @@ Route::middleware(['auth', 'admin', 'redirect.books.index'])->prefix('admin')->n
     Route::get('/export/books', [ImportExportController::class, 'exportBooks'])->name('export.books');
     Route::get('/export/orders', [ImportExportController::class, 'exportOrders'])->name('export.orders');
     Route::get('/export/template', [ImportExportController::class, 'downloadTemplate'])->name('export.template');
-    Route::prefix('api')->middleware(['throttle.tiered'])->group(function () {
-        Route::get('/books', [BookController::class, 'index']);
-        Route::get('/books/{book}', [BookController::class, 'show']);
-
-        // Protected API routes with premium tier
-        Route::middleware(['auth:sanctum', 'throttle.tiered:premium'])->group(function () {
-            Route::get('/user/orders', [OrderController::class, 'index']);
-            Route::post('/orders', [OrderController::class, 'store']);
-        });
-    });
-
     Route::get('/audit-logs/export/csv', [AuditLogController::class, 'export'])->name('audit.export');
     Route::get('/audit-logs/verify/integrity', [AuditLogController::class, 'verifyIntegrity'])->name('audit.verify');
     Route::get('/audit-logs/stats/json', [AuditLogController::class, 'stats'])->name('audit.stats');

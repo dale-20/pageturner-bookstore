@@ -15,6 +15,22 @@
         {{-- Recent Reviews --}}
         @include('components.recent-reviews')
 
+        {{-- ── Data Management Section ─────────────────────────── --}}
+        <div class="col-12">
+            <h5 class="fw-bold mb-3 text-muted" style="letter-spacing:.04em; font-size:.75rem; text-transform:uppercase;">
+                <i class="feather feather-server me-2"></i>Data Management
+            </h5>
+        </div>
+
+        {{-- Import / Export Status --}}
+        @include('components.import-export-status')
+
+        {{-- Audit Log Summary --}}
+        @include('components.audit-log-summary')
+
+        {{-- System Health --}}
+        @include('components.system-health')
+
     </div>
 @endsection
 

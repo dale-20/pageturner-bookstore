@@ -14,6 +14,7 @@ use App\Console\Commands\AuditRetentionCommand;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
@@ -180,6 +181,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'redirect.books.index' => \App\Http\Middleware\RedirectBookIndex::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'audit' => \App\Http\Middleware\AuditMiddleware::class,
+            'throttle.tiered' => \App\Http\Middleware\TieredRateLimiter::class,
         ]);
 
         $middleware->web([

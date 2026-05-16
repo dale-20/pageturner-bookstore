@@ -5,6 +5,7 @@ namespace App\Models;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model implements Auditable
@@ -47,6 +48,23 @@ class Book extends Model implements Auditable
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function scopeInCategory(Builder $query, mixed $categoryId): Builder
+    {
+        return $query->when($categoryId, fn (Builder $query) => $query->where('category_id', $categoryId));
+    }
+
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        return $query->when($search, function (Builder $query, string $search) {
+            $query->where(function (Builder $query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('author', 'like', "%{$search}%")
+                    ->orWhere('isbn', 'like', "%{$search}%");
+            });
+        });
+    }
+
     // Accessor for average rating
     public function getAverageRatingAttribute()
     {

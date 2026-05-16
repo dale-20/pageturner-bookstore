@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
@@ -71,6 +72,11 @@ class User extends Authenticatable implements Auditable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function scopeRole(Builder $query, string $role): Builder
+    {
+        return $query->where('role', $role);
     }
 
     public function hasPurchased($bookId)
