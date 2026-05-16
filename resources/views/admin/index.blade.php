@@ -31,6 +31,19 @@
         {{-- System Health --}}
         @include('components.system-health')
 
+             {{-- ── Reporting Section ───────────────────────────────── --}}   {{-- ADD FROM HERE --}}
+        <div class="col-12">
+            <h5 class="fw-bold mb-3 text-muted" style="letter-spacing:.04em; font-size:.75rem; text-transform:uppercase;">
+                <i class="feather feather-bar-chart-2 me-2"></i>Reporting & Inventory
+            </h5>
+        </div>
+
+        {{-- Bestseller Stats --}}
+        @include('components.bestseller-stats')
+
+        {{-- Inventory Summary --}}
+        @include('components.inventory-summary')        
+
     </div>
 @endsection
 

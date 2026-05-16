@@ -12,34 +12,38 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create admin user
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@pageturner.com',
-            'role' => 'admin',
+        $this->call([
+            CategorySeeder::class,
+            MassBookSeeder::class,   
         ]);
+        // Create admin user
+        // User::factory()->create([
+        //     'name' => 'Admin User',
+        //     'email' => 'admin@pageturner.com',
+        //     'role' => 'admin',
+        // ]);
 
         // Create customer users
-        $customers = User::factory(10)->create(['role' => 'customer']);
+        // $customers = User::factory(10)->create(['role' => 'customer']);
 
         // Create categories
-        $categories = Category::factory(8)->create();
+        // $categories = Category::factory(8)->create();
 
         // Create books for each category
-        $categories->each(function ($category) {
-            Book::factory(5)->create(['category_id' => $category->id]);
-        });
+        // $categories->each(function ($category) {
+        //     Book::factory(5)->create(['category_id' => $category->id]);
+        // });
 
         // Create reviews
-        $books = Book::all();
-        $customers->each(function ($customer) use ($books) {
-            // Each customer reviews 3-5 random books
-            $books->random(rand(3, 5))->each(function ($book) use ($customer) {
-                Review::factory()->create([
-                    'user_id' => $customer->id,
-                    'book_id' => $book->id,
-                ]);
-            });
-        });
+        // $books = Book::all();
+        // $customers->each(function ($customer) use ($books) {
+        //     // Each customer reviews 3-5 random books
+        //     $books->random(rand(3, 5))->each(function ($book) use ($customer) {
+        //         Review::factory()->create([
+        //             'user_id' => $customer->id,
+        //             'book_id' => $book->id,
+        //         ]);
+        //     });
+        // });
     }
 }

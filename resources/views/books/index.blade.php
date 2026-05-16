@@ -30,9 +30,9 @@
                                                 <i class="bi bi-search text-danger"></i>
                                             </span>
                                             <input type="text" 
-                                                   name="search" 
+                                                   name="q" 
                                                    value="{{ request('search') }}"
-                                                   placeholder="Title, author, or description..."
+                                                   placeholder="Search by title or author..."
                                                    class="form-control border-start-0 rounded-end-4 py-3"
                                                    style="background: white;">
                                         </div>
@@ -73,8 +73,8 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <span class="text-muted">Found</span>
-                            <strong class="text-primary">{{ $books->total() }}</strong>
-                            <span class="text-muted">book{{ $books->total() !== 1 ? 's' : '' }}</span>
+                            <strong class="text-primary">{{ number_format($total) }}</strong>
+                            <span class="text-muted">book{{ $total !== 1 ? 's' : '' }}</span>
                         </h5>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
             @if($books->count() > 0)
                 <div class="row g-4">
                     @foreach($books as $book)
-                            <x-book-card :book="$book" />
+                        <x-book-card :book="$book" />
                     @endforeach
                 </div>
 
