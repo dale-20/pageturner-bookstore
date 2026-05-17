@@ -3,41 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Category;
+use App\Repositories\BookRepository;
+use App\Services\BookCacheService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class BookController extends Controller
 {
+    public function __construct(
+        private BookRepository    $books,
+        private BookCacheService  $cache,
+    ) {}
+
     public function index(Request $request)
     {
         $searchTerm = trim($request->get('search', ''));
         $categoryId = $request->get('category');
         $isbn       = trim($request->get('isbn', ''));
 
-        // ── ISBN exact lookup — Redis cached, bypasses Scout ─────────────────
+        // ── ISBN exact lookup — Redis cached via BookCacheService ─────────────
         if (!empty($isbn)) {
-            $cacheKey = 'isbn:' . $isbn;
-            $book = Cache::remember($cacheKey, 3600, function () use ($isbn) {
-                return Book::with('category')
-                    ->withAvg('reviews', 'rating')
-                    ->withCount('reviews')
-                    ->where('isbn', $isbn)
-                    ->first();
-            });
+            $book = $this->books->findByIsbn($isbn);
 
-            $categories = Cache::remember('categories', 3600, fn() => Category::all());
-
-            // Return a single-result listing so the view doesn't need changes
             $books = $book
                 ? Book::with('category')
                     ->withAvg('reviews', 'rating')
                     ->withCount('reviews')
                     ->where('isbn', $isbn)
                     ->paginate(100)
-                : Book::whereRaw('false')->paginate(100); // empty paginator
+                : Book::whereRaw('false')->paginate(100);
 
-            $total = $books->total();
+            $total      = $books->total();
+            $categories = $this->books->allCategories();
 
             return view('books.index', compact('books', 'categories', 'total', 'searchTerm'));
         }
@@ -46,7 +42,6 @@ class BookController extends Controller
         if (!empty($searchTerm)) {
             $scoutOptions = [];
 
-            // Apply category filter inside Meilisearch if provided
             if (!empty($categoryId)) {
                 $scoutOptions['filter'] = "category_id = {$categoryId}";
             }
@@ -66,32 +61,22 @@ class BookController extends Controller
                 ->paginate(100);
 
             $total      = $books->total();
-            $categories = Cache::remember('categories', 3600, fn() => Category::all());
+            $categories = $this->books->allCategories();
 
             return view('books.index', compact('books', 'categories', 'total', 'searchTerm'));
         }
 
-        // ── Normal catalog listing — no search term ───────────────────────────
-        // Uses idx_books_catalog_filter index; withAvg/withCount avoid N+1.
-        $query = Book::with('category:id,name')
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews')
-            ->select(['id', 'isbn', 'title', 'author', 'price', 'stock_quantity', 'category_id']);
-
-        if (!empty($categoryId)) {
-            $query->where('category_id', $categoryId);
-        }
-
-        $books      = $query->orderBy('id')->paginate(100);
+        // ── Normal catalog listing — via BookRepository ───────────────────────
+        $books      = $this->books->catalog($categoryId ? (int) $categoryId : null);
         $total      = $books->total();
-        $categories = Cache::remember('categories', 3600, fn() => Category::all());
+        $categories = $this->books->allCategories();
 
         return view('books.index', compact('books', 'categories', 'total', 'searchTerm'));
     }
 
     public function create()
     {
-        $categories = Cache::remember('categories', 3600, fn() => Category::all());
+        $categories = $this->books->allCategories();
         return view('books.create', compact('categories'));
     }
 
@@ -114,6 +99,7 @@ class BookController extends Controller
         }
 
         Book::create($validated);
+        // BookObserver::saved() fires automatically — clears ISBN + category cache
 
         return redirect()->route('books.index')
             ->with('success', 'Book added successfully!');
@@ -127,7 +113,7 @@ class BookController extends Controller
 
     public function edit(Book $book)
     {
-        $categories = Category::all();
+        $categories = $this->books->allCategories();
         return view('books.edit', compact('book', 'categories'));
     }
 
@@ -150,6 +136,7 @@ class BookController extends Controller
         }
 
         $book->update($validated);
+        // BookObserver::saved() fires automatically — clears ISBN + category cache
 
         return redirect()->route('admin.books.show', $book)
             ->with('success', 'Book updated successfully!');
@@ -158,6 +145,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $book->delete();
+        // BookObserver::deleted() fires automatically — clears ISBN + category cache
 
         return redirect()->route('books.index')
             ->with('success', 'Book deleted successfully!');
