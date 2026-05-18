@@ -95,13 +95,13 @@ class Book extends Model implements Auditable
     public function toSearchableArray(): array
     {
         return [
-            'id'             => $this->id,
-            'title'          => $this->title,
-            'author'         => $this->author,
-            'isbn'           => $this->isbn,
-            'price'          => (float) $this->price,
+            'id' => $this->id,
+            'title' => $this->title,
+            'author' => $this->author,
+            'isbn' => $this->isbn,
+            'price' => (float) $this->price,
             'stock_quantity' => (int) $this->stock_quantity,
-            'category_id'    => $this->category_id,
+            'category_id' => $this->category_id,
         ];
     }
 
@@ -147,5 +147,10 @@ class Book extends Model implements Auditable
         }
 
         return true;
+    }
+
+    public function aiReviewSummary()
+    {
+        return $this->hasOne(\App\Models\AIReviewSummary::class);
     }
 }

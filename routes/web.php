@@ -13,6 +13,7 @@ use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReviewSummaryController;
 use Illuminate\Support\Facades\Route;
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -154,6 +155,16 @@ Route::middleware(['auth', 'admin', 'redirect.books.index'])->prefix('admin')->n
     Route::get('/audit-logs/stats/json', [AuditLogController::class, 'stats'])->name('audit.stats');
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit.index');
     Route::get('/audit-logs/{id}', [AuditLogController::class, 'show'])->whereNumber('id')->name('audit.show');
+
+     // ── AI Review Summaries ───────────────────────────────────────────────────
+    Route::prefix('ai')->name('ai.')->group(function () {
+        Route::get('/summaries', [ReviewSummaryController::class, 'index'])->name('summaries.index');
+        Route::get('/summaries/{bookId}', [ReviewSummaryController::class, 'show'])->name('summaries.show');
+        Route::middleware('throttle:30,1')->group(function () {
+            Route::post('/summaries/{bookId}/generate', [ReviewSummaryController::class, 'generate'])->name('summaries.generate');
+            Route::delete('/summaries/{bookId}', [ReviewSummaryController::class, 'destroy'])->name('summaries.destroy');
+        });
+    });
 });
 
 require __DIR__ . '/auth.php';

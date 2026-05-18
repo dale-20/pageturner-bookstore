@@ -11,7 +11,7 @@
                 <li class="nxl-item nxl-caption">
                     <label>Navigation</label>
                 </li>
-                
+
                 <!-- Dashboards -->
                 <li class="nxl-item nxl-hasmenu">
                     <a href="javascript:void(0);" class="nxl-link">
@@ -70,9 +70,27 @@
                     </a>
                 </li>
 
-              
-            </ul>
+                {{-- AI Intelligence --}}
+                <li class="nxl-item nxl-caption">
+                    <label>AI Intelligence</label>
+                </li>
 
+                <li class="nxl-item nxl-hasmenu">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-cpu"></i></span>
+                        <span class="nxl-mtext">AI Features</span>
+                        <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                    </a>
+                    <ul class="nxl-submenu">
+                        <li class="nxl-item">
+                            <a class="nxl-link" href="{{ route('admin.ai.summaries.index') }}">
+                                Review Summaries
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
         </div>
     </div>
 </nav>

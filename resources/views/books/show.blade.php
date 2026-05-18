@@ -186,6 +186,13 @@
             @endforelse
         </div>
     </section>
+
+    {{-- AI Review Summary Widget --}}
+    <section class="py-4">
+        <div class="container">
+            @include('ai.summaries._widget', ['book' => $book])
+        </div>
+    </section>
 @endsection
 
 @section('styles')

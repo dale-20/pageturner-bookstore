@@ -187,7 +187,7 @@ return [
          * The password to be used for archive encryption.
          * Set to `null` to disable encryption.
          */
-        'password' => env('STUPID_DOG'),
+        'password' => env('DB_PASSWORD'),
 
         /*
          * The encryption algorithm to be used for archive encryption.
