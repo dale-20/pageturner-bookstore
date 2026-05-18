@@ -73,7 +73,7 @@ All 12 required steps from Laboratory Activity 7 have been completed successfull
 **Total Records Seeded:** 1,000,000
 
 **Verification Screenshot:** 
-> ![Database Count 1M](Screenshot%202026-05-16%20182552.png)
+> ![Database Count 1M](public/screenshots/Screenshot%202026-05-16%20182552.png)
 > 
 > *`DB::table('books')->count()` returns exactly 1,000,000 records*
 
